@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Search, GraduationCap, CheckCircle2, AlertCircle, FileText, Download, UserCheck, Shield, Printer, Sparkles, Check, Award } from 'lucide-react';
 import initialData from '@/data/initialData.json';
-import { downloadMarksheetFile } from '@/lib/downloadMarksheet';
+import { downloadMarksheetFile, printMarksheetWindow } from '@/lib/downloadMarksheet';
 
 export default function ResultSearchSection() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -67,11 +67,16 @@ export default function ResultSearchSection() {
     }
   };
 
-  const handleDownloadMarksheet = () => {
+  const handleDownload = () => {
     if (!studentResult) return;
     setDownloading(true);
     downloadMarksheetFile(studentResult);
-    setTimeout(() => setDownloading(false), 1500);
+    setTimeout(() => setDownloading(false), 1200);
+  };
+
+  const handlePrint = () => {
+    if (!studentResult) return;
+    printMarksheetWindow(studentResult);
   };
 
   return (
@@ -237,15 +242,23 @@ export default function ResultSearchSection() {
                   </div>
                 </div>
 
-                {/* Footer Download Action Button */}
-                <div className="pt-4 border-t border-slate-200 flex items-center justify-center relative z-10">
+                {/* Footer Action Buttons (Download & Print) */}
+                <div className="pt-4 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-center gap-3 relative z-10">
                   <button
-                    onClick={handleDownloadMarksheet}
+                    onClick={handleDownload}
                     disabled={downloading}
-                    className="w-full sm:w-auto px-10 py-4 bg-[#C5A059] hover:bg-[#b59049] text-[#050B18] font-black text-xs uppercase tracking-wider rounded-xl transition-all shadow-xl hover:scale-105 flex items-center justify-center space-x-2.5 border-2 border-[#050B18]"
+                    className="w-full sm:w-auto px-8 py-3.5 bg-[#C5A059] hover:bg-[#b59049] text-[#050B18] font-black text-xs uppercase tracking-wider rounded-xl transition-all shadow-xl hover:scale-105 flex items-center justify-center space-x-2 border-2 border-[#050B18]"
                   >
-                    <Download className="w-5 h-5 text-[#050B18]" />
-                    <span>{downloading ? 'GENERATING MARKSHEET...' : 'DOWNLOAD MARKSHEET (HTML / PDF)'}</span>
+                    <Download className="w-4 h-4 text-[#050B18]" />
+                    <span>{downloading ? 'DOWNLOADING...' : 'DOWNLOAD MARKSHEET FILE (.HTML)'}</span>
+                  </button>
+
+                  <button
+                    onClick={handlePrint}
+                    className="w-full sm:w-auto px-8 py-3.5 bg-[#050B18] hover:bg-slate-800 text-[#C5A059] font-black text-xs uppercase tracking-wider rounded-xl transition-all shadow-xl hover:scale-105 flex items-center justify-center space-x-2 border-2 border-[#C5A059]"
+                  >
+                    <Printer className="w-4 h-4 text-[#C5A059]" />
+                    <span>PRINT / SAVE PDF</span>
                   </button>
                 </div>
 
