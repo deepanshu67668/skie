@@ -1,0 +1,530 @@
+{
+  "settings": {
+    "brandName": "Shri Krishan Institute of Education",
+    "shortBrand": "SKIE Academy",
+    "tagline": "Build Skills. Build Confidence. Build Your Career.",
+    "subheading": "Practical computer and technology training designed to help students learn industry-relevant skills and become career-ready.",
+    "phone": "+91 8882362470",
+    "phoneAlt": "+91 8882362470",
+    "email": "skieacademyofficial@gmail.com",
+    "address": "Ghoda Gate, Near Laxmi Sweets, Pavi Sadakpur, Loni, Ghaziabad, UP - 201102",
+    "whatsappNumber": "918882362470",
+    "isoNumber": "ISO 9001:2015 Certified",
+    "trustRegNo": "Reg. No. 3123/IV (Public Charitable Trust Act 1882, Govt. of India NCT Delhi)",
+    "tradeMarkNo": "App. No. 3214249 (Ministry of Commerce & Industry)",
+    "laborRegNo": "Regd. No. 201006450 (Department of Labor, Govt. of India)",
+    "chairman": {
+      "name": "Sandeep Tyagi",
+      "title": "Chairman, SKIE Academy",
+      "message": "Education is the most powerful tool you can possess, and at SKIE, we strive to sharpen that tool every day. When we started this institute, our goal was simple: to create a place where students don't just learn syntax and code, but learn how to solve real-world problems. I am proud to say that under the guidance of our expert faculty, hundreds of students have transformed their careers. My promise to you is simple—you bring the dedication, and we will provide the guidance, infrastructure, and opportunities you need to succeed.",
+      "image": "https://skieofficial.com/wp-content/uploads/2026/01/Sandeep-1.webp"
+    },
+    "stats": {
+      "studentsTrained": "5000+",
+      "yearsExcellence": "10+",
+      "professionalCourses": "20+",
+      "practicalLearning": "100%",
+      "studentSatisfaction": "95%+"
+    }
+  },
+  "courses": [
+    {
+      "id": "adca-1",
+      "name": "ADCA (Advance Diploma in Computer Applications)",
+      "category": "Diploma Courses",
+      "shortDesc": "Comprehensive 1-year master diploma covering computer basics, MS Office, Advanced Excel, Tally Prime + GST, Graphic Design, Web Design, and Internet applications.",
+      "fullDesc": "The Advance Diploma in Computer Applications (ADCA) is SKIE Academy's flagship 12-month program. Designed for students seeking complete IT literacy and practical workplace skills, this course transforms beginners into proficient office executives, accounting professionals, and graphic operators.",
+      "duration": "12 Months",
+      "skillLevel": "Beginner to Advanced",
+      "fees": "₹1,200 / Month",
+      "badge": "Best Seller",
+      "featured": true,
+      "image": "https://skieofficial.com/wp-content/uploads/2026/01/Diploma-Courses-683x1024.webp",
+      "curriculum": [
+        "Module 1: Computer Fundamentals & Windows OS",
+        "Module 2: MS Office Suite (Word, Excel, PowerPoint, Access)",
+        "Module 3: Advanced Excel & Data Analysis (VLOOKUP, Pivot Tables, Dashboards)",
+        "Module 4: Tally Prime with GST Accounting & Taxation",
+        "Module 5: DTP & Graphic Design (Photoshop, CorelDRAW)",
+        "Module 6: HTML, CSS & Web Design Fundamentals",
+        "Module 7: Internet, Cyber Security & Digital Office Tools"
+      ],
+      "careerOps": [
+        "Computer Operator",
+        "Office Executive",
+        "Data Entry Specialist",
+        "Accounts Executive",
+        "Graphic Designer Junior",
+        "Lab Instructor"
+      ],
+      "eligibility": "10th / 12th Pass or equivalent",
+      "toolsCovered": [
+        "MS Word",
+        "MS Excel",
+        "Tally Prime",
+        "Photoshop",
+        "CorelDRAW",
+        "HTML5",
+        "CSS3"
+      ],
+      "certificateProvided": true
+    },
+    {
+      "id": "dca-2",
+      "name": "DCA (Diploma in Computer Applications)",
+      "category": "Diploma Courses",
+      "shortDesc": "6-month practical diploma focusing on essential computer applications, office automation, internet literacy, and desktop publishing.",
+      "fullDesc": "DCA is ideal for school/college students and job seekers looking for a recognized 6-month computer diploma. Gain hands-on expertise in office tools, document creation, data formatting, and digital communications.",
+      "duration": "6 Months",
+      "skillLevel": "Beginner to Intermediate",
+      "fees": "₹1,000 / Month",
+      "badge": "Popular",
+      "featured": true,
+      "image": "https://skieofficial.com/wp-content/uploads/2026/01/Diploma-Courses-683x1024.webp",
+      "curriculum": [
+        "Module 1: Fundamental Concepts of Computers & Hardware",
+        "Module 2: Operating Systems & File Management",
+        "Module 3: MS Word & Professional Documentation",
+        "Module 4: MS Excel Spreadsheets & Formulas",
+        "Module 5: MS PowerPoint Presentations",
+        "Module 6: DTP Fundamentals (Photoshop & PageMaker Basics)",
+        "Module 7: Internet Banking, E-governance & Email Writing"
+      ],
+      "careerOps": [
+        "Office Assistant",
+        "Data Entry Operator",
+        "Documentation Officer",
+        "Front Desk Executive"
+      ],
+      "eligibility": "10th Pass or above",
+      "toolsCovered": [
+        "MS Office",
+        "Windows 11",
+        "Google Workspace",
+        "Adobe Photoshop"
+      ],
+      "certificateProvided": true
+    },
+    {
+      "id": "tally-gst-3",
+      "name": "Tally Prime with GST & Financial Accounting",
+      "category": "Professional Courses",
+      "shortDesc": "Master computerized accounting, GST returns, voucher entry, inventory management, e-invoicing, and payroll in Tally Prime.",
+      "fullDesc": "Learn practical business accounting from certified industry accounting experts. This course covers everything from debit/credit fundamentals to live GST filing, e-way bills, TDS, and balance sheet finalization in Tally Prime.",
+      "duration": "3 Months",
+      "skillLevel": "Intermediate",
+      "fees": "₹3,500 Total",
+      "badge": "Job Ready",
+      "featured": true,
+      "image": "https://skieofficial.com/wp-content/uploads/2026/01/Certificate-Course-683x1024.webp",
+      "curriculum": [
+        "Accounting Principles & Double Entry System",
+        "Company Creation & Group Ledger Setup in Tally Prime",
+        "Voucher Entry (Payment, Receipt, Sales, Purchase, Journal)",
+        "Inventory & Stock Management with Batches",
+        "GST Setup, Tax Invoicing & E-Way Bills",
+        "GSTR-1, GSTR-3B Return Filing Fundamentals",
+        "Payroll Management & Statutory Compliances (PF/ESI)",
+        "Financial Reports & Balance Sheet Finalization"
+      ],
+      "careerOps": [
+        "Tally Accountant",
+        "Billing Executive",
+        "Accounts Assistant",
+        "Taxation Associate"
+      ],
+      "eligibility": "10th/12th Commerce or any stream with basic computer knowledge",
+      "toolsCovered": [
+        "Tally Prime",
+        "GST Portal",
+        "MS Excel"
+      ],
+      "certificateProvided": true
+    },
+    {
+      "id": "adv-excel-4",
+      "name": "Advanced Excel & Business Analytics",
+      "category": "Professional Courses",
+      "shortDesc": "Master formulas, VLOOKUP/XLOOKUP, Pivot Tables, Power Query, Macros, data cleaning, and dynamic interactive dashboards.",
+      "fullDesc": "Excel is the #1 tool required in modern corporate offices. Elevate your spreadsheet skills to an expert level with automated reporting, data visualization, conditional formatting, and dashboard building.",
+      "duration": "2 Months",
+      "skillLevel": "Intermediate to Advanced",
+      "fees": "₹2,500 Total",
+      "badge": "High Demand",
+      "featured": true,
+      "image": "https://skieofficial.com/wp-content/uploads/2026/01/Certificate-Course-683x1024.webp",
+      "curriculum": [
+        "Advanced Lookup Functions (VLOOKUP, HLOOKUP, XLOOKUP, INDEX-MATCH)",
+        "Logical & Text Functions (IF, AND, OR, CONCAT, TEXTJOIN)",
+        "Data Validation & Conditional Formatting",
+        "Pivot Tables, Slicers & Calculated Fields",
+        "Power Query & Data Transformation",
+        "Dynamic Dashboard Creation & Charts",
+        "Introduction to Excel Macros & Automation Basics"
+      ],
+      "careerOps": [
+        "Data Analyst Associate",
+        "MIS Executive",
+        "Reporting Analyst",
+        "Operations Specialist"
+      ],
+      "eligibility": "Basic MS Excel knowledge",
+      "toolsCovered": [
+        "Microsoft Excel 365",
+        "Power Query"
+      ],
+      "certificateProvided": true
+    },
+    {
+      "id": "web-dev-5",
+      "name": "Web Development & Frontend Design",
+      "category": "Programming & Development",
+      "shortDesc": "Build responsive modern websites using HTML5, CSS3, JavaScript, Tailwind CSS, and GitHub.",
+      "fullDesc": "Kickstart your coding career with hands-on web development training. Learn to code clean, mobile-responsive websites, interactive UI components, and host live sites on GitHub Pages and Netlify.",
+      "duration": "4 Months",
+      "skillLevel": "Beginner to Intermediate",
+      "fees": "₹6,000 Total",
+      "badge": "Tech Career",
+      "featured": true,
+      "image": "https://skieofficial.com/wp-content/uploads/2026/01/Certificate-Course-683x1024.webp",
+      "curriculum": [
+        "HTML5 Semantic Layouts & Forms",
+        "CSS3 Flexbox, Grid, Animations & Media Queries",
+        "Tailwind CSS Modern Styling",
+        "JavaScript Core (DOM Manipulation, Events, ES6+)",
+        "Responsive Mobile-First UI Design",
+        "Git & GitHub Version Control",
+        "Live Portfolio Website Capstone Project"
+      ],
+      "careerOps": [
+        "Web Designer",
+        "Frontend Developer Trainee",
+        "UI Web Developer",
+        "Freelancer"
+      ],
+      "eligibility": "10th/12th Pass with passion for coding",
+      "toolsCovered": [
+        "VS Code",
+        "HTML5",
+        "CSS3",
+        "JavaScript",
+        "Tailwind CSS",
+        "Git"
+      ],
+      "certificateProvided": true
+    },
+    {
+      "id": "female-course-6",
+      "name": "Special Computer Skills for Female Students",
+      "category": "Female Special Courses",
+      "shortDesc": "Empowering women with practical digital literacy, typing, office administration, internet safety, and work-from-home skills.",
+      "fullDesc": "A dedicated, comfortable learning program tailored specifically for female students, homemakers, and working women to gain financial independence through practical computer skills and digital office training.",
+      "duration": "3 to 6 Months",
+      "skillLevel": "Beginner",
+      "fees": "Special Concession Available",
+      "badge": "Women Empowerment",
+      "featured": true,
+      "image": "https://skieofficial.com/wp-content/uploads/2026/01/female-course-683x1024.webp",
+      "curriculum": [
+        "Computer Fundamentals & Speed Typing",
+        "MS Office (Word, Excel & PowerPoint)",
+        "Internet Banking, Online Forms & E-Services",
+        "Digital Communication & Professional Email",
+        "Graphic Design Basics (Canva & Photoshop)",
+        "Data Entry & Remote Administrative Skills"
+      ],
+      "careerOps": [
+        "Data Entry Operator",
+        "Front Office Coordinator",
+        "Tele-caller Executive",
+        "Freelance Assistant"
+      ],
+      "eligibility": "No formal qualification required",
+      "toolsCovered": [
+        "MS Office",
+        "Canva",
+        "Google Docs/Sheets",
+        "Typing Master"
+      ],
+      "certificateProvided": true
+    },
+    {
+      "id": "teacher-training-7",
+      "name": "Nursery Teacher Training (NTT) & Computer Teacher Training",
+      "category": "Teacher Training",
+      "shortDesc": "Professional diploma program for aspiring nursery school teachers and school computer instructors with pedagogical methods.",
+      "fullDesc": "Comprehensive teacher training program combining early childhood education pedagogy, child psychology, school administration, and modern digital teaching methods.",
+      "duration": "1 Year / 6 Months",
+      "skillLevel": "Intermediate",
+      "fees": "Flexible Installments",
+      "badge": "Govt Recognized",
+      "featured": true,
+      "image": "https://skieofficial.com/wp-content/uploads/2026/01/Teacher-training-683x1024.webp",
+      "curriculum": [
+        "Child Psychology & Learning Theories",
+        "Nursery School Management & Administration",
+        "Teaching Aids, Arts & Crafts Development",
+        "Smart Classroom & Digital Teaching Tools",
+        "Computer Literacy for School Teachers",
+        "Practical Teaching Practice & Micro-Teaching"
+      ],
+      "careerOps": [
+        "Nursery School Teacher",
+        "Primary Computer Teacher",
+        "Activity Teacher",
+        "Pre-School Coordinator"
+      ],
+      "eligibility": "12th Pass (Arts/Science/Commerce)",
+      "toolsCovered": [
+        "Smart Board Tools",
+        "MS PowerPoint",
+        "Educational Software"
+      ],
+      "certificateProvided": true
+    },
+    {
+      "id": "python-8",
+      "name": "Python Programming & Data Science Fundamentals",
+      "category": "Programming & Development",
+      "shortDesc": "Learn Python syntax, Object-Oriented Programming, Pandas, NumPy, and Data Visualization.",
+      "fullDesc": "Step into the world of software development and AI with Python. Build console applications, data analysis scripts, and automate daily tasks.",
+      "duration": "3 Months",
+      "skillLevel": "Beginner to Intermediate",
+      "fees": "₹5,000 Total",
+      "badge": "Future Tech",
+      "featured": false,
+      "image": "https://skieofficial.com/wp-content/uploads/2026/01/Certificate-Course-683x1024.webp",
+      "curriculum": [
+        "Python Syntax, Variables & Data Types",
+        "Control Structures, Loops & Functions",
+        "Object-Oriented Programming (OOP)",
+        "File Handling & Exception Handling",
+        "Data Manipulation with NumPy & Pandas",
+        "Data Visualization with Matplotlib",
+        "Capstone Python Project"
+      ],
+      "careerOps": [
+        "Python Developer Trainee",
+        "Data Analyst Junior",
+        "Automation Assistant"
+      ],
+      "eligibility": "12th Pass or pursuing Graduation",
+      "toolsCovered": [
+        "Python 3",
+        "VS Code",
+        "Jupyter Notebook"
+      ],
+      "certificateProvided": true
+    }
+  ],
+  "studentResults": [
+    {
+      "rollNo": "SKIE-2025-0101",
+      "studentName": "Rahul Sharma",
+      "fatherName": "Rajesh Sharma",
+      "course": "Advance Diploma in Computer Applications (ADCA)",
+      "year": "2025",
+      "session": "Jan 2024 - Dec 2024",
+      "grade": "A+",
+      "totalMarks": 475,
+      "maxMarks": 500,
+      "percentage": "95%",
+      "status": "Passed with Distinction",
+      "issueDate": "15-Jan-2025",
+      "verificationCode": "SKIE-VER-88219"
+    },
+    {
+      "rollNo": "SKIE-2025-0102",
+      "studentName": "Priya Verma",
+      "fatherName": "Sunil Verma",
+      "course": "Tally Prime with GST & Financial Accounting",
+      "year": "2025",
+      "session": "Sep 2024 - Nov 2024",
+      "grade": "A+",
+      "totalMarks": 288,
+      "maxMarks": 300,
+      "percentage": "96%",
+      "status": "Passed with Distinction",
+      "issueDate": "10-Dec-2024",
+      "verificationCode": "SKIE-VER-77412"
+    },
+    {
+      "rollNo": "SKIE-2025-0103",
+      "studentName": "Amit Kumar",
+      "fatherName": "Ramesh Kumar",
+      "course": "Diploma in Computer Applications (DCA)",
+      "year": "2025",
+      "session": "Jul 2024 - Dec 2024",
+      "grade": "A",
+      "totalMarks": 430,
+      "maxMarks": 500,
+      "percentage": "86%",
+      "status": "Passed",
+      "issueDate": "05-Jan-2025",
+      "verificationCode": "SKIE-VER-66310"
+    },
+    {
+      "rollNo": "SKIE-2025-0104",
+      "studentName": "Neha Gupta",
+      "fatherName": "Mahesh Gupta",
+      "course": "Advanced Excel & Business Analytics",
+      "year": "2025",
+      "session": "Oct 2024 - Dec 2024",
+      "grade": "A+",
+      "totalMarks": 192,
+      "maxMarks": 200,
+      "percentage": "96%",
+      "status": "Passed with Distinction",
+      "issueDate": "20-Dec-2024",
+      "verificationCode": "SKIE-VER-55198"
+    },
+    {
+      "rollNo": "SKIE-2025-0105",
+      "studentName": "Shivam Tyagi",
+      "fatherName": "Anil Tyagi",
+      "course": "Web Development & Frontend Design",
+      "year": "2025",
+      "session": "Aug 2024 - Nov 2024",
+      "grade": "A+",
+      "totalMarks": 380,
+      "maxMarks": 400,
+      "percentage": "95%",
+      "status": "Passed with Distinction",
+      "issueDate": "30-Nov-2024",
+      "verificationCode": "SKIE-VER-44211"
+    }
+  ],
+  "gallery": [
+    {
+      "id": "gal-1",
+      "title": "Computer Practical Lab Training Session",
+      "category": "Classroom",
+      "imageUrl": "https://skieofficial.com/wp-content/uploads/2026/01/front-page-1024x683.webp"
+    },
+    {
+      "id": "gal-2",
+      "title": "Annual Certificate Distribution Ceremony",
+      "category": "Events",
+      "imageUrl": "https://skieofficial.com/wp-content/uploads/2026/01/skie-final-1.webp"
+    },
+    {
+      "id": "gal-3",
+      "title": "Student Interactive Practical Lab",
+      "category": "Training",
+      "imageUrl": "https://skieofficial.com/wp-content/uploads/2026/01/front-page.webp"
+    },
+    {
+      "id": "gal-4",
+      "title": "ISO 9001:2015 & Govt Reg Accreditation",
+      "category": "Certificates",
+      "imageUrl": "https://skieofficial.com/wp-content/uploads/2026/01/Trademark-Certificate-scaled.webp"
+    },
+    {
+      "id": "gal-5",
+      "title": "Female Special Batch Practical Class",
+      "category": "Students",
+      "imageUrl": "https://skieofficial.com/wp-content/uploads/2026/01/female-course.webp"
+    },
+    {
+      "id": "gal-6",
+      "title": "Government Trust Registration & MSME Certificate",
+      "category": "Certificates",
+      "imageUrl": "https://skieofficial.com/wp-content/uploads/2026/01/MSME-Certificate-scaled.webp"
+    }
+  ],
+  "testimonials": [
+    {
+      "id": "t-1",
+      "studentName": "Kavita Rani",
+      "course": "ADCA Course Batch",
+      "review": "SKIE Academy changed my career completely! The practical training in Tally Prime, Advanced Excel, and MS Office gave me the confidence to crack my interview. Today I work as an Office Executive in Ghaziabad.",
+      "rating": 5,
+      "achievement": "Placed as Office Executive",
+      "photo": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=200"
+    },
+    {
+      "id": "t-2",
+      "studentName": "Vikas Singh",
+      "course": "Tally Prime + GST",
+      "review": "Best accounting institute in Loni Ghaziabad! Sir explained GST return filing, voucher entries, and inventory management with real company examples. Highly recommended for commerce and non-commerce students.",
+      "rating": 5,
+      "achievement": "Working at Accounts Firm",
+      "photo": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200"
+    },
+    {
+      "id": "t-3",
+      "studentName": "Deepak Kumar",
+      "course": "Web Development",
+      "review": "The faculty at SKIE does not just focus on bookish theory. We built real web applications, learned HTML, CSS, JavaScript, and Tailwind CSS. The lab facility and individual student attention are top notch.",
+      "rating": 5,
+      "achievement": "Frontend Developer Intern",
+      "photo": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=200"
+    }
+  ],
+  "certifications": [
+    {
+      "id": "cert-1",
+      "title": "ISO 9001:2015 Quality Management Certificate",
+      "authority": "International Organization for Standardization",
+      "regNo": "ISO 9001:2015",
+      "description": "Certified Quality Management System for educational standards, structured IT course syllabus, and training excellence.",
+      "imageUrl": "https://skieofficial.com/wp-content/uploads/2026/01/Trademark-Certificate-scaled.webp"
+    },
+    {
+      "id": "cert-2",
+      "title": "Government Trust Registration",
+      "authority": "Govt. of India NCT Delhi (Public Charitable Trust Act 1882)",
+      "regNo": "Reg. No. 3123/IV",
+      "description": "Registered under section 60 for technical skill development and affordable education in computer science.",
+      "imageUrl": "https://skieofficial.com/wp-content/uploads/2026/01/Establishment-Details-1.webp"
+    },
+    {
+      "id": "cert-3",
+      "title": "Trade Mark Registration Certificate",
+      "authority": "Controller General of Patents Design & Trade Marks (Ministry of Commerce & Industry)",
+      "regNo": "Application No. 3214249",
+      "description": "Legally protected brand trademark registration under the Ministry of Commerce & Industry, Govt. of India.",
+      "imageUrl": "https://skieofficial.com/wp-content/uploads/2026/01/Trademark-Certificate-scaled.webp"
+    },
+    {
+      "id": "cert-4",
+      "title": "Department of Labor Govt. of India Registration",
+      "authority": "Department of Labor, Govt. of India, Delhi",
+      "regNo": "Regd. No. 201006450",
+      "description": "Recognized employment-oriented institute registered with the Department of Labor.",
+      "imageUrl": "https://skieofficial.com/wp-content/uploads/2026/01/MSME-Certificate-scaled.webp"
+    }
+  ],
+  "enquiries": [
+    {
+      "id": "enq-1787222143872",
+      "name": "Akash",
+      "phone": "8765787976",
+      "email": "akash@gmail.com",
+      "course": "Admissions",
+      "message": "davsad",
+      "date": "2026-08-20",
+      "status": "New"
+    },
+    {
+      "id": "enq-1",
+      "name": "Manish Sharma",
+      "phone": "+91 9876543210",
+      "email": "manish@gmail.com",
+      "course": "Advance Diploma in Computer Applications (ADCA)",
+      "message": "Interested in morning batch timings and fee discount details.",
+      "date": "2026-08-18",
+      "status": "New"
+    },
+    {
+      "id": "enq-2",
+      "name": "Sunita Devi",
+      "phone": "+91 8765432109",
+      "email": "sunita@gmail.com",
+      "course": "Special Computer Skills for Female Students",
+      "message": "Looking for female special batch details in Loni Ghaziabad.",
+      "date": "2026-08-17",
+      "status": "Contacted"
+    }
+  ]
+}
