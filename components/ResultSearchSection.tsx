@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { Search, GraduationCap, CheckCircle2, AlertCircle, FileText, Download, UserCheck, Shield, Printer, Sparkles, Check } from 'lucide-react';
+import { Search, GraduationCap, CheckCircle2, AlertCircle, FileText, Download, UserCheck, Shield, Printer, Sparkles, Check, Award } from 'lucide-react';
 import initialData from '@/data/initialData.json';
+import { downloadMarksheetFile } from '@/lib/downloadMarksheet';
 
 export default function ResultSearchSection() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -67,11 +68,10 @@ export default function ResultSearchSection() {
   };
 
   const handleDownloadMarksheet = () => {
+    if (!studentResult) return;
     setDownloading(true);
-    setTimeout(() => {
-      window.print();
-      setDownloading(false);
-    }, 300);
+    downloadMarksheetFile(studentResult);
+    setTimeout(() => setDownloading(false), 1500);
   };
 
   return (
@@ -96,7 +96,7 @@ export default function ResultSearchSection() {
           </h2>
 
           <p className="text-slate-300 text-xs sm:text-sm leading-relaxed max-w-2xl mx-auto">
-            Search student examination result, grade breakdown, and download official ISO 9001:2015 verified marksheet instantly.
+            Search student marksheet, grade breakdown, and download official ISO 9001:2015 verified certificate status instantly.
           </p>
         </div>
 
@@ -142,90 +142,110 @@ export default function ResultSearchSection() {
 
         </div>
 
-        {/* Result Card Display */}
+        {/* Ultra-Attractive Verified Marksheet Card Display */}
         {searched && (
           <div className="max-w-3xl mx-auto">
             {studentResult ? (
-              <div className="bg-white text-slate-900 border-2 border-[#C5A059] rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6 animate-fade-in print:p-0 print:border-none print:shadow-none">
+              <div className="bg-white text-slate-900 border-4 border-[#C5A059] rounded-3xl p-6 sm:p-10 shadow-2xl space-y-6 relative overflow-hidden animate-fade-in">
                 
-                {/* Printable Certificate Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b-2 border-slate-200 gap-4">
-                  <div className="flex items-center space-x-4">
-                    <div className="w-14 h-14 rounded-full bg-[#050B18] text-[#C5A059] border-2 border-[#C5A059] flex items-center justify-center font-serif font-black text-2xl flex-shrink-0 shadow-md">
-                      S
-                    </div>
-                    <div>
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-[#C5A059]">
-                        SHRI KRISHAN INSTITUTE OF EDUCATION
-                      </span>
-                      <h3 className="text-2xl font-serif font-bold text-[#050B18]">
-                        {studentResult.studentName}
-                      </h3>
-                      <p className="text-xs text-slate-600 font-medium">
-                        Roll No: <span className="font-mono font-bold text-[#C5A059]">{studentResult.rollNo}</span> | Father: <strong>{studentResult.fatherName}</strong>
-                      </p>
-                    </div>
-                  </div>
+                {/* Background Watermark */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-serif font-black text-6xl text-slate-900/[0.03] rotate-[-25deg] pointer-events-none select-none whitespace-nowrap">
+                  SKIE ACADEMY CERTIFIED
+                </div>
 
-                  <div className="flex items-center space-x-2 px-3.5 py-1.5 bg-emerald-50 border border-emerald-300 text-emerald-800 rounded-full text-xs font-bold self-start sm:self-auto shadow-xs">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                    <span>ISO 9001:2015 VERIFIED</span>
+                {/* Top Official Seal Banner */}
+                <div className="text-center pb-6 border-b-4 border-double border-[#C5A059] space-y-2 relative z-10">
+                  <div className="w-16 h-16 rounded-full bg-[#050B18] text-[#C5A059] border-2 border-[#C5A059] flex items-center justify-center font-serif font-black text-2xl mx-auto shadow-lg">
+                    S
+                  </div>
+                  <span className="text-[11px] font-black uppercase tracking-[0.25em] text-[#C5A059] block">
+                    SHRI KRISHAN INSTITUTE OF EDUCATION
+                  </span>
+                  <h3 className="text-2xl sm:text-3xl font-serif font-bold text-[#050B18]">
+                    Official Verified Statement of Marks
+                  </h3>
+                  <p className="text-[10px] text-slate-500 font-semibold max-w-xl mx-auto">
+                    Reg. No. 3123/IV (Public Charitable Trust Act 1882, Govt. of India NCT Delhi) • ISO 9001:2015 Certified Institute • Trade Marks Regd. No. 3214249
+                  </p>
+                </div>
+
+                {/* Student Personal Details Grid */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-[#F8F8F5] p-5 rounded-2xl border border-slate-200 text-xs font-sans relative z-10">
+                  <div>
+                    <span className="text-[10px] text-slate-400 font-bold uppercase block">Roll Number</span>
+                    <span className="font-mono font-bold text-base text-[#C5A059]">{studentResult.rollNo}</span>
+                  </div>
+                  <div>
+                    <span className="text-[10px] text-slate-400 font-bold uppercase block">Student Full Name</span>
+                    <span className="font-bold text-sm text-[#050B18]">{studentResult.studentName}</span>
+                  </div>
+                  <div>
+                    <span className="text-[10px] text-slate-400 font-bold uppercase block">Father's Name</span>
+                    <span className="font-semibold text-slate-800">{studentResult.fatherName}</span>
+                  </div>
+                  <div>
+                    <span className="text-[10px] text-slate-400 font-bold uppercase block">Session</span>
+                    <span className="font-semibold text-slate-800">{studentResult.session || 'Jan 2024 - Dec 2024'}</span>
                   </div>
                 </div>
 
                 {/* Course Name */}
-                <div className="p-4 bg-[#050B18] text-white rounded-xl border border-[#C5A059]/40 flex items-center justify-between">
+                <div className="p-4 bg-[#050B18] text-white rounded-2xl border-2 border-[#C5A059] flex items-center justify-between relative z-10">
                   <div>
                     <span className="text-[10px] font-bold text-[#C5A059] uppercase tracking-wider block">Completed Program:</span>
-                    <h4 className="text-base font-serif font-bold text-white">{studentResult.course}</h4>
+                    <h4 className="text-base sm:text-lg font-serif font-bold text-white">{studentResult.course}</h4>
                   </div>
-                  <span className="text-xs font-bold text-[#C5A059] bg-[#C5A059]/15 px-3 py-1 rounded-full border border-[#C5A059]/30">
-                    Session: {studentResult.session || '2024-2025'}
-                  </span>
-                </div>
-
-                {/* Performance Breakdown Grid */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-4 rounded-xl border border-slate-200 text-center font-sans">
-                  <div>
-                    <span className="text-[10px] text-slate-500 font-bold uppercase block">Total Marks</span>
-                    <span className="text-lg font-black text-[#050B18]">{studentResult.totalMarks || 475} / {studentResult.maxMarks || 500}</span>
-                  </div>
-                  <div>
-                    <span className="text-[10px] text-slate-500 font-bold uppercase block">Percentage</span>
-                    <span className="text-lg font-black text-[#C5A059]">{studentResult.percentage}</span>
-                  </div>
-                  <div>
-                    <span className="text-[10px] text-slate-500 font-bold uppercase block">Grade</span>
-                    <span className="text-lg font-black text-emerald-600">{studentResult.grade}</span>
-                  </div>
-                  <div>
-                    <span className="text-[10px] text-slate-500 font-bold uppercase block">Result Status</span>
-                    <span className="text-xs font-bold text-emerald-700 uppercase">{studentResult.status || 'PASSED'}</span>
+                  <div className="px-3 py-1 bg-emerald-500/20 text-emerald-400 rounded-full text-xs font-extrabold border border-emerald-500/40 flex items-center space-x-1">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>VERIFIED PASSED</span>
                   </div>
                 </div>
 
-                {/* Verification Code */}
-                <div className="p-3.5 bg-[#F8F8F5] border border-slate-200 rounded-xl flex items-center justify-between text-xs font-sans">
-                  <span className="text-slate-600 font-semibold">Official Verification Code:</span>
-                  <span className="font-mono font-bold text-[#050B18] bg-slate-200 px-3 py-1 rounded border border-slate-300">
-                    {studentResult.verificationCode || 'SKIE-VER-88219'}
-                  </span>
+                {/* Performance Summary Grid */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-white p-5 rounded-2xl border-2 border-slate-200 text-center font-sans relative z-10">
+                  <div>
+                    <span className="text-[10px] text-slate-400 font-bold uppercase block">Total Marks</span>
+                    <span className="text-xl font-black text-[#050B18]">{studentResult.totalMarks || 475} / {studentResult.maxMarks || 500}</span>
+                  </div>
+                  <div>
+                    <span className="text-[10px] text-slate-400 font-bold uppercase block">Percentage</span>
+                    <span className="text-xl font-black text-[#C5A059]">{studentResult.percentage}</span>
+                  </div>
+                  <div>
+                    <span className="text-[10px] text-slate-400 font-bold uppercase block">Grade</span>
+                    <span className="text-xl font-black text-emerald-600">{studentResult.grade}</span>
+                  </div>
+                  <div>
+                    <span className="text-[10px] text-slate-400 font-bold uppercase block">Issue Date</span>
+                    <span className="text-xs font-bold text-slate-800">{studentResult.issueDate || '15-Jan-2025'}</span>
+                  </div>
                 </div>
 
-                {/* Footer Download Action */}
-                <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-slate-200 print:hidden">
-                  <div className="flex items-center space-x-2 text-xs text-slate-500 font-semibold">
-                    <Shield className="w-4 h-4 text-[#C5A059]" />
-                    <span>Government NCT Delhi Regd. Certificate</span>
+                {/* Verification Code & Director Signature */}
+                <div className="pt-4 border-t-2 border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs relative z-10">
+                  <div className="space-y-1">
+                    <span className="text-[10px] font-bold text-slate-400 uppercase block">Digital Security Code:</span>
+                    <span className="font-mono font-bold text-[#C5A059] bg-[#050B18] px-3 py-1 rounded-lg border border-[#C5A059]/40 inline-block text-xs">
+                      {studentResult.verificationCode || 'SKIE-VER-88219'}
+                    </span>
                   </div>
 
+                  <div className="text-center sm:text-right space-y-1">
+                    <div className="w-32 border-b-2 border-[#050B18] mx-auto sm:ml-auto" />
+                    <span className="font-serif font-bold text-[#050B18] block text-sm">Sandeep Tyagi</span>
+                    <span className="text-[10px] text-slate-500 font-semibold block">Founder & Director, SKIE Academy</span>
+                  </div>
+                </div>
+
+                {/* Footer Download Action Button */}
+                <div className="pt-4 border-t border-slate-200 flex items-center justify-center relative z-10">
                   <button
                     onClick={handleDownloadMarksheet}
                     disabled={downloading}
-                    className="w-full sm:w-auto px-7 py-3 bg-[#C5A059] hover:bg-[#b59049] text-[#050B18] font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-lg hover:scale-105 flex items-center justify-center space-x-2"
+                    className="w-full sm:w-auto px-10 py-4 bg-[#C5A059] hover:bg-[#b59049] text-[#050B18] font-black text-xs uppercase tracking-wider rounded-xl transition-all shadow-xl hover:scale-105 flex items-center justify-center space-x-2.5 border-2 border-[#050B18]"
                   >
-                    <Download className="w-4 h-4" />
-                    <span>{downloading ? 'PREPARING DOWNLOAD...' : 'DOWNLOAD / PRINT MARKSHEET'}</span>
+                    <Download className="w-5 h-5 text-[#050B18]" />
+                    <span>{downloading ? 'GENERATING MARKSHEET...' : 'DOWNLOAD MARKSHEET (HTML / PDF)'}</span>
                   </button>
                 </div>
 

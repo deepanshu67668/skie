@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import initialData from '@/data/initialData.json';
 import { StudentResult } from '@/lib/db';
 import { Search, Award, ShieldCheck, FileText, Printer, Download, CheckCircle2 } from 'lucide-react';
+import { downloadMarksheetFile } from '@/lib/downloadMarksheet';
 
 export default function ResultsPage() {
   const [results, setResults] = useState<StudentResult[]>(initialData.studentResults as StudentResult[]);
@@ -158,98 +159,99 @@ export default function ResultsPage() {
 
       </div>
 
-      {/* Official Marksheet Modal Lightbox */}
+      {/* Ultra-Attractive Marksheet Certificate Lightbox */}
       {activeResult && (
-        <div className="fixed inset-0 z-50 bg-[#050B18]/85 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-2xl w-full p-8 shadow-2xl border-2 border-[#C5A059] relative space-y-6 animate-scale-up">
-            
-            {/* Modal Header */}
-            <div className="flex items-center justify-between border-b pb-4">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-xl bg-[#050B18] text-[#C5A059] flex items-center justify-center font-serif font-black text-lg border border-[#C5A059]">
-                  S
-                </div>
-                <div>
-                  <h3 className="text-lg font-serif font-bold text-[#050B18]">Official SKIE Marksheet Certificate</h3>
-                  <p className="text-xs text-slate-500">Verification Code: <span className="font-mono font-bold text-[#C5A059]">{activeResult.verificationCode}</span></p>
-                </div>
-              </div>
+        <div
+          onClick={() => setActiveResult(null)}
+          className="fixed inset-0 z-50 bg-[#050B18]/85 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 overflow-y-auto"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-10 shadow-2xl border-4 border-[#C5A059] relative space-y-6 animate-scale-up my-auto"
+          >
+            {/* Close Button */}
+            <button
+              onClick={() => setActiveResult(null)}
+              className="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold flex items-center justify-center transition-colors"
+            >
+              ✕
+            </button>
 
-              <button
-                onClick={() => setActiveResult(null)}
-                className="w-8 h-8 rounded-full bg-slate-100 text-slate-600 font-bold hover:bg-slate-200 flex items-center justify-center"
-              >
-                ✕
-              </button>
+            {/* Header Seal */}
+            <div className="text-center pb-6 border-b-4 border-double border-[#C5A059] space-y-2">
+              <div className="w-16 h-16 rounded-full bg-[#050B18] text-[#C5A059] border-2 border-[#C5A059] flex items-center justify-center font-serif font-black text-2xl mx-auto shadow-lg">
+                S
+              </div>
+              <span className="text-[11px] font-black uppercase tracking-[0.25em] text-[#C5A059] block">
+                SHRI KRISHAN INSTITUTE OF EDUCATION
+              </span>
+              <h3 className="text-2xl font-serif font-bold text-[#050B18]">
+                Official Verified Statement of Marks
+              </h3>
+              <p className="text-[10px] text-slate-500 font-semibold max-w-xl mx-auto">
+                Reg. No. 3123/IV (Public Charitable Trust Act 1882, Govt. of India NCT Delhi) • ISO 9001:2015 Certified Institute
+              </p>
             </div>
 
-            {/* Marksheet Body */}
-            <div className="space-y-4 text-sm text-slate-800 bg-[#F8F8F5] p-6 rounded-2xl border border-slate-200">
-              
-              <div className="grid grid-cols-2 gap-3 text-xs">
-                <div>
-                  <span className="text-slate-500 font-medium">Roll Number:</span>
-                  <p className="font-bold text-[#050B18] font-mono">{activeResult.rollNo}</p>
-                </div>
-                <div>
-                  <span className="text-slate-500 font-medium">Student Name:</span>
-                  <p className="font-bold text-[#050B18]">{activeResult.studentName}</p>
-                </div>
-                <div>
-                  <span className="text-slate-500 font-medium">Father's Name:</span>
-                  <p className="font-bold text-[#050B18]">{activeResult.fatherName}</p>
-                </div>
-                <div>
-                  <span className="text-slate-500 font-medium">Session:</span>
-                  <p className="font-bold text-[#050B18]">{activeResult.session}</p>
-                </div>
+            {/* Marksheet Details Grid */}
+            <div className="grid grid-cols-2 gap-3 bg-[#F8F8F5] p-4 rounded-2xl border border-slate-200 text-xs">
+              <div>
+                <span className="text-slate-400 font-bold uppercase block text-[10px]">Roll Number</span>
+                <span className="font-mono font-bold text-base text-[#C5A059]">{activeResult.rollNo}</span>
               </div>
-
-              <div className="pt-3 border-t border-slate-200">
-                <span className="text-slate-500 text-xs font-medium">Course Title:</span>
-                <p className="font-bold text-[#C5A059] text-base">{activeResult.course}</p>
+              <div>
+                <span className="text-slate-400 font-bold uppercase block text-[10px]">Student Name</span>
+                <span className="font-bold text-slate-900">{activeResult.studentName}</span>
               </div>
-
-              <div className="grid grid-cols-3 gap-2 bg-white p-4 rounded-xl border border-slate-200 text-center">
-                <div>
-                  <span className="text-[11px] text-slate-500 font-semibold block">Total Marks</span>
-                  <span className="text-lg font-extrabold text-[#050B18]">{activeResult.totalMarks} / {activeResult.maxMarks}</span>
-                </div>
-                <div>
-                  <span className="text-[11px] text-slate-500 font-semibold block">Percentage</span>
-                  <span className="text-lg font-extrabold text-[#C5A059]">{activeResult.percentage}</span>
-                </div>
-                <div>
-                  <span className="text-[11px] text-slate-500 font-semibold block">Grade</span>
-                  <span className="text-lg font-extrabold text-emerald-600">{activeResult.grade}</span>
-                </div>
+              <div>
+                <span className="text-slate-400 font-bold uppercase block text-[10px]">Father's Name</span>
+                <span className="font-semibold text-slate-800">{activeResult.fatherName}</span>
               </div>
-
-              <div className="flex items-center justify-between text-xs text-emerald-800 bg-emerald-50 p-3 rounded-xl border border-emerald-300 font-semibold">
-                <span className="flex items-center space-x-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                  <span>Status: {activeResult.status}</span>
-                </span>
-                <span>Issue Date: {activeResult.issueDate}</span>
+              <div>
+                <span className="text-slate-400 font-bold uppercase block text-[10px]">Session</span>
+                <span className="font-semibold text-slate-800">{activeResult.session}</span>
               </div>
+            </div>
 
+            {/* Course Title */}
+            <div className="p-3.5 bg-[#050B18] text-white rounded-xl border border-[#C5A059]/40 flex items-center justify-between">
+              <div>
+                <span className="text-[10px] font-bold text-[#C5A059] uppercase tracking-wider block">Course Title:</span>
+                <h4 className="text-base font-serif font-bold text-white">{activeResult.course}</h4>
+              </div>
+              <span className="text-xs font-bold text-emerald-400 bg-emerald-500/20 px-3 py-1 rounded-full border border-emerald-500/40">
+                {activeResult.status}
+              </span>
+            </div>
+
+            {/* Marks Performance */}
+            <div className="grid grid-cols-3 gap-2 bg-white p-4 rounded-xl border border-slate-200 text-center font-sans">
+              <div>
+                <span className="text-[10px] text-slate-400 font-bold uppercase block">Total Marks</span>
+                <span className="text-xl font-extrabold text-[#050B18]">{activeResult.totalMarks} / {activeResult.maxMarks}</span>
+              </div>
+              <div>
+                <span className="text-[10px] text-slate-400 font-bold uppercase block">Percentage</span>
+                <span className="text-xl font-extrabold text-[#C5A059]">{activeResult.percentage}</span>
+              </div>
+              <div>
+                <span className="text-[10px] text-slate-400 font-bold uppercase block">Grade</span>
+                <span className="text-xl font-extrabold text-emerald-600">{activeResult.grade}</span>
+              </div>
             </div>
 
             {/* Modal Actions */}
-            <div className="flex items-center justify-end space-x-3">
-              <button
-                onClick={() => window.print()}
-                className="px-6 py-3 rounded-xl bg-[#C5A059] hover:bg-[#b59049] text-[#050B18] text-xs font-bold uppercase tracking-wider shadow-md flex items-center space-x-2 transition-all hover:scale-105"
-              >
-                <Download className="w-4 h-4" />
-                <span>DOWNLOAD / PRINT MARKSHEET</span>
-              </button>
+            <div className="flex items-center justify-between pt-2 border-t border-slate-200">
+              <span className="text-xs font-mono font-bold text-[#C5A059] bg-[#050B18] px-3 py-1 rounded-md">
+                {activeResult.verificationCode}
+              </span>
 
               <button
-                onClick={() => setActiveResult(null)}
-                className="px-5 py-3 rounded-xl bg-[#050B18] text-white text-xs font-bold uppercase"
+                onClick={() => downloadMarksheetFile(activeResult)}
+                className="px-8 py-3.5 rounded-xl bg-[#C5A059] hover:bg-[#b59049] text-[#050B18] text-xs font-black uppercase tracking-wider shadow-lg flex items-center space-x-2 transition-all hover:scale-105 border-2 border-[#050B18]"
               >
-                CLOSE
+                <Download className="w-4 h-4 text-[#050B18]" />
+                <span>DOWNLOAD MARKSHEET (HTML / PDF)</span>
               </button>
             </div>
 
