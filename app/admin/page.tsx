@@ -3,20 +3,24 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { DBData, Course, StudentResult, Enquiry, GalleryItem } from '@/lib/db';
-import { LayoutDashboard, Users, BookOpen, Award, Image as ImageIcon, MessageSquare, Settings as SettingsIcon, LogOut, Save, Plus, Trash2, CheckCircle2, AlertCircle, Globe, Search, Sparkles, MessageCircle, Phone, ShieldCheck, Flame, Edit } from 'lucide-react';
+import { LayoutDashboard, Users, BookOpen, Award, Image as ImageIcon, MessageSquare, Settings as SettingsIcon, LogOut, Save, Plus, Trash2, CheckCircle2, AlertCircle, Globe, Search, Sparkles, MessageCircle, Phone, ShieldCheck, Flame, Edit3, X, UserCheck } from 'lucide-react';
 
 export default function AdminDashboardPage() {
   const router = useRouter();
   const [data, setData] = useState<DBData | null>(null);
   const [adminKey, setAdminKey] = useState<string>('');
-  const [activeTab, setActiveTab] = useState<'enquiries' | 'courses' | 'results' | 'faculty' | 'seo' | 'gallery' | 'settings'>('enquiries');
+  const [activeTab, setActiveTab] = useState<'enquiries' | 'courses' | 'results' | 'seo' | 'gallery' | 'settings'>('enquiries');
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   // Search/Filter State inside Admin
   const [enquirySearch, setEnquirySearch] = useState('');
 
-  // New Course Modal State
+  // Editing States for Modals
+  const [editingCourse, setEditingCourse] = useState<Course | null>(null);
+  const [editingResult, setEditingResult] = useState<StudentResult | null>(null);
+
+  // New Course Form State
   const [newCourse, setNewCourse] = useState<Partial<Course>>({
     name: '',
     category: 'Diploma Courses',
@@ -34,7 +38,7 @@ export default function AdminDashboardPage() {
     featured: true,
   });
 
-  // New Result Modal State
+  // New Result Form State
   const [newResult, setNewResult] = useState<Partial<StudentResult>>({
     rollNo: `SKIE-2026-0${Math.floor(100 + Math.random() * 900)}`,
     studentName: '',
@@ -62,7 +66,6 @@ export default function AdminDashboardPage() {
     fetch('/api/data')
       .then((res) => res.json())
       .then((dbData: DBData) => {
-        // Ensure SEO structure exists
         if (!dbData.settings.seo) {
           dbData.settings.seo = {
             metaTitle: "SKIE Academy | Shri Krishan Institute of Education",
@@ -91,7 +94,7 @@ export default function AdminDashboardPage() {
 
       if (res.ok) {
         setData(updatedData);
-        setMsg({ type: 'success', text: 'Changes saved successfully to SKIE Website database & SEO metadata!' });
+        setMsg({ type: 'success', text: 'Website data & current records updated successfully!' });
       } else {
         setMsg({ type: 'error', text: 'Failed to save changes.' });
       }
@@ -112,13 +115,13 @@ export default function AdminDashboardPage() {
       <div className="min-h-[70vh] flex items-center justify-center text-slate-600 font-bold font-sans">
         <div className="text-center space-y-3">
           <div className="w-12 h-12 border-4 border-[#C5A059] border-t-transparent rounded-full animate-spin mx-auto" />
-          <p>Loading SKIE Executive Control Center...</p>
+          <p>Loading SKIE Control Center...</p>
         </div>
       </div>
     );
   }
 
-  // Quick Stats
+  // Stats
   const totalEnquiries = data.enquiries.length;
   const newEnquiries = data.enquiries.filter((e) => e.status === 'New').length;
   const totalCourses = data.courses.length;
@@ -153,10 +156,10 @@ export default function AdminDashboardPage() {
               </span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-serif font-bold text-white mt-1">
-              SKIE Academy Institutional Dashboard
+              SKIE Academy Management Portal
             </h1>
             <p className="text-xs text-slate-300">
-              Manage Live Admissions, Courses, Marksheets, SEO Meta Data & Marquee Ticker
+              Edit Live Courses, Student Marksheets, Director Message, SEO Metadata & Ticker
             </p>
           </div>
         </div>
@@ -187,7 +190,7 @@ export default function AdminDashboardPage() {
         </div>
       )}
 
-      {/* Overview Metric Cards Row */}
+      {/* Metric Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         
         <div className="bg-white p-5 rounded-2xl border-2 border-slate-200 shadow-sm flex items-center justify-between">
@@ -236,11 +239,11 @@ export default function AdminDashboardPage() {
       <div className="flex items-center space-x-2 border-b-2 border-slate-200 overflow-x-auto pb-3 scrollbar-none">
         {[
           { id: 'enquiries', label: `ADMISSION LEADS (${totalEnquiries})`, icon: Users },
-          { id: 'courses', label: `COURSES (${totalCourses})`, icon: BookOpen },
-          { id: 'results', label: `STUDENT RESULTS (${totalResults})`, icon: Award },
+          { id: 'courses', label: `MANAGE COURSES (${totalCourses})`, icon: BookOpen },
+          { id: 'results', label: `MANAGE MARKSHEETS (${totalResults})`, icon: Award },
           { id: 'seo', label: 'SEO & META DATA', icon: Globe },
           { id: 'gallery', label: 'GALLERY MEDIA', icon: ImageIcon },
-          { id: 'settings', label: 'SETTINGS & TICKER', icon: SettingsIcon },
+          { id: 'settings', label: 'DIRECTOR & SETTINGS', icon: SettingsIcon },
         ].map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -266,8 +269,8 @@ export default function AdminDashboardPage() {
         <div className="bg-white p-6 sm:p-8 rounded-2xl border-2 border-slate-200 shadow-md space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-4">
             <div>
-              <h2 className="text-xl font-serif font-bold text-[#050B18]">Student Admission & Callback Leads</h2>
-              <p className="text-xs text-slate-500">Real-time leads submitted via online enquiry forms and splash screen</p>
+              <h2 className="text-xl font-serif font-bold text-[#050B18]">Student Admission Leads</h2>
+              <p className="text-xs text-slate-500">Real-time enquiries submitted via website splash & enquiry form</p>
             </div>
 
             <div className="relative w-full sm:w-64">
@@ -276,7 +279,7 @@ export default function AdminDashboardPage() {
                 type="text"
                 value={enquirySearch}
                 onChange={(e) => setEnquirySearch(e.target.value)}
-                placeholder="Search leads by name or phone..."
+                placeholder="Search leads..."
                 className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs outline-none focus:border-[#C5A059]"
               />
             </div>
@@ -291,7 +294,7 @@ export default function AdminDashboardPage() {
                   <th className="p-3.5">Phone Number</th>
                   <th className="p-3.5">Course Requested</th>
                   <th className="p-3.5">Status</th>
-                  <th className="p-3.5 text-right">Quick Contact / Action</th>
+                  <th className="p-3.5 text-right">Action</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 font-medium">
@@ -367,9 +370,11 @@ export default function AdminDashboardPage() {
         </div>
       )}
 
-      {/* Tab 2: Course Management */}
+      {/* Tab 2: Course Management (With Edit Current Course) */}
       {activeTab === 'courses' && (
         <div className="space-y-6">
+          
+          {/* Add New Course Section */}
           <div className="bg-white p-6 sm:p-8 rounded-2xl border-2 border-slate-200 shadow-md space-y-4">
             <h2 className="text-lg font-serif font-bold text-[#050B18] flex items-center space-x-2">
               <Plus className="w-5 h-5 text-[#C5A059]" />
@@ -379,10 +384,10 @@ export default function AdminDashboardPage() {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
               <input
                 type="text"
-                placeholder="Course Title (e.g. ADCA Master Diploma)"
+                placeholder="Course Title"
                 value={newCourse.name}
                 onChange={(e) => setNewCourse({ ...newCourse, name: e.target.value })}
-                className="p-3 rounded-xl border border-slate-300 outline-none focus:border-[#C5A059]"
+                className="p-3 rounded-xl border border-slate-300 outline-none"
               />
               <select
                 value={newCourse.category}
@@ -444,36 +449,52 @@ export default function AdminDashboardPage() {
               }}
               className="px-8 py-3 rounded-xl bg-[#C5A059] hover:bg-[#b59049] text-[#050B18] font-bold text-xs uppercase tracking-wider shadow-md"
             >
-              PUBLISH COURSE TO WEBSITE
+              PUBLISH NEW COURSE
             </button>
           </div>
 
-          {/* List of Published Courses */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {data.courses.map((course) => (
-              <div key={course.id} className="p-4 rounded-xl bg-white border-2 border-slate-200 flex items-center justify-between shadow-xs">
-                <div>
-                  <span className="text-[10px] font-bold text-[#C5A059] bg-[#050B18] px-2.5 py-0.5 rounded">{course.category}</span>
-                  <h4 className="font-bold text-sm text-[#050B18] mt-1.5">{course.name}</h4>
-                  <p className="text-xs text-slate-500 font-semibold">{course.duration} • {course.fees}</p>
+          {/* Published Courses List (With EDIT & DELETE options) */}
+          <div className="space-y-3">
+            <h3 className="text-base font-serif font-bold text-[#050B18]">Currently Published Courses on Website ({data.courses.length})</h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {data.courses.map((course) => (
+                <div key={course.id} className="p-5 rounded-2xl bg-white border-2 border-slate-200 hover:border-[#C5A059] flex items-center justify-between shadow-xs">
+                  <div className="space-y-1">
+                    <span className="text-[10px] font-bold text-[#C5A059] bg-[#050B18] px-2.5 py-0.5 rounded">{course.category}</span>
+                    <h4 className="font-serif font-bold text-base text-[#050B18]">{course.name}</h4>
+                    <p className="text-xs text-slate-600 font-semibold">{course.duration} • <span className="text-[#C5A059] font-bold">{course.fees}</span></p>
+                    <p className="text-[11px] text-slate-500 max-w-sm line-clamp-1">{course.shortDesc}</p>
+                  </div>
+
+                  <div className="flex items-center space-x-2 flex-shrink-0">
+                    <button
+                      onClick={() => setEditingCourse(course)}
+                      className="px-3 py-1.5 bg-[#050B18] text-[#C5A059] hover:bg-[#C5A059] hover:text-[#050B18] rounded-xl text-xs font-bold transition-colors flex items-center space-x-1 shadow-sm"
+                      title="Edit Course"
+                    >
+                      <Edit3 className="w-3.5 h-3.5" />
+                      <span>EDIT</span>
+                    </button>
+                    <button
+                      onClick={() => {
+                        const updated = { ...data, courses: data.courses.filter((c) => c.id !== course.id) };
+                        handleSaveData(updated);
+                      }}
+                      className="p-2 text-rose-600 hover:bg-rose-50 rounded-xl"
+                      title="Delete Course"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
-                <button
-                  onClick={() => {
-                    const updated = { ...data, courses: data.courses.filter((c) => c.id !== course.id) };
-                    handleSaveData(updated);
-                  }}
-                  className="p-2 text-rose-600 hover:bg-rose-50 rounded-lg"
-                  title="Delete Course"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       )}
 
-      {/* Tab 3: Student Results Management */}
+      {/* Tab 3: Student Results Management (With Edit Current Result) */}
       {activeTab === 'results' && (
         <div className="space-y-6">
           <div className="bg-white p-6 sm:p-8 rounded-2xl border-2 border-slate-200 shadow-md space-y-4">
@@ -557,6 +578,13 @@ export default function AdminDashboardPage() {
                 <div className="flex items-center space-x-3">
                   <span className="font-bold text-emerald-600">{res.percentage} (Grade {res.grade})</span>
                   <button
+                    onClick={() => setEditingResult(res)}
+                    className="px-3 py-1 bg-[#050B18] text-[#C5A059] rounded-lg text-xs font-bold flex items-center space-x-1"
+                  >
+                    <Edit3 className="w-3.5 h-3.5" />
+                    <span>EDIT</span>
+                  </button>
+                  <button
                     onClick={() => {
                       const updated = { ...data, studentResults: data.studentResults.filter((r) => r.rollNo !== res.rollNo) };
                       handleSaveData(updated);
@@ -582,13 +610,13 @@ export default function AdminDashboardPage() {
                 <Globe className="w-5 h-5 text-[#C5A059]" />
                 <span>SEO & Search Engine Metadata Control Center</span>
               </h2>
-              <p className="text-xs text-slate-500">Manage site meta titles, descriptions, keywords, OpenGraph share images, and tracking IDs</p>
+              <p className="text-xs text-slate-500">Edit website title, description, keywords, and OpenGraph preview images</p>
             </div>
           </div>
 
           <div className="space-y-4 text-xs">
             <div>
-              <label className="block font-bold text-[#050B18] mb-1">Website Meta Title Tag (appears in Google Search)</label>
+              <label className="block font-bold text-[#050B18] mb-1">Website Meta Title Tag (Appears in Google Search Results)</label>
               <input
                 type="text"
                 value={data.settings.seo?.metaTitle || ''}
@@ -606,7 +634,7 @@ export default function AdminDashboardPage() {
             </div>
 
             <div>
-              <label className="block font-bold text-[#050B18] mb-1">Meta Description Tag (Google search summary)</label>
+              <label className="block font-bold text-[#050B18] mb-1">Meta Description Tag (Google search summary paragraph)</label>
               <textarea
                 rows={3}
                 value={data.settings.seo?.metaDescription || ''}
@@ -625,7 +653,7 @@ export default function AdminDashboardPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block font-bold text-[#050B18] mb-1">SEO Keywords (Comma separated)</label>
+                <label className="block font-bold text-[#050B18] mb-1">SEO Keywords (Comma separated tags)</label>
                 <input
                   type="text"
                   value={data.settings.seo?.keywords || ''}
@@ -643,7 +671,7 @@ export default function AdminDashboardPage() {
               </div>
 
               <div>
-                <label className="block font-bold text-[#050B18] mb-1">Google Analytics ID</label>
+                <label className="block font-bold text-[#050B18] mb-1">Google Analytics Tracking ID</label>
                 <input
                   type="text"
                   value={data.settings.seo?.googleAnalyticsId || ''}
@@ -662,7 +690,7 @@ export default function AdminDashboardPage() {
             </div>
 
             <div>
-              <label className="block font-bold text-[#050B18] mb-1">OpenGraph Share Image URL (WhatsApp/Facebook preview)</label>
+              <label className="block font-bold text-[#050B18] mb-1">OpenGraph Share Image URL (WhatsApp & Facebook link preview)</label>
               <input
                 type="text"
                 value={data.settings.seo?.ogImage || ''}
@@ -691,12 +719,12 @@ export default function AdminDashboardPage() {
         </div>
       )}
 
-      {/* Tab 6: Settings & Marquee Ticker */}
+      {/* Tab 5: Settings & Chairman Message */}
       {activeTab === 'settings' && (
         <div className="bg-white p-6 sm:p-8 rounded-2xl border-2 border-slate-200 shadow-md space-y-6">
           <h2 className="text-lg font-serif font-bold text-[#050B18] flex items-center space-x-2">
             <SettingsIcon className="w-5 h-5 text-[#C5A059]" />
-            <span>Update Campus Contact Info & Top Gold Marquee Ticker</span>
+            <span>Edit Chairman Message & Campus Settings</span>
           </h2>
 
           <div className="space-y-4 text-xs">
@@ -716,6 +744,66 @@ export default function AdminDashboardPage() {
                 }
                 className="w-full p-3 rounded-xl border border-slate-300 outline-none focus:border-[#C5A059] font-semibold"
               />
+            </div>
+
+            <div className="p-4 bg-[#F8F8F5] border border-slate-200 rounded-xl space-y-3">
+              <h3 className="font-bold text-[#050B18] uppercase">Director / Chairman Message Settings</h3>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">Chairman Name</label>
+                  <input
+                    type="text"
+                    value={data.settings.chairman?.name || ''}
+                    onChange={(e) =>
+                      setData({
+                        ...data,
+                        settings: {
+                          ...data.settings,
+                          chairman: { ...data.settings.chairman, name: e.target.value },
+                        },
+                      })
+                    }
+                    className="w-full p-2.5 rounded-xl border bg-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">Chairman Designation Title</label>
+                  <input
+                    type="text"
+                    value={data.settings.chairman?.title || ''}
+                    onChange={(e) =>
+                      setData({
+                        ...data,
+                        settings: {
+                          ...data.settings,
+                          chairman: { ...data.settings.chairman, title: e.target.value },
+                        },
+                      })
+                    }
+                    className="w-full p-2.5 rounded-xl border bg-white"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block font-bold text-slate-700 mb-1">Chairman Message Text</label>
+                <textarea
+                  rows={4}
+                  value={data.settings.chairman?.message || ''}
+                  onChange={(e) =>
+                    setData({
+                      ...data,
+                      settings: {
+                        ...data.settings,
+                        chairman: { ...data.settings.chairman, message: e.target.value },
+                      },
+                    })
+                  }
+                  className="w-full p-2.5 rounded-xl border bg-white"
+                />
+              </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -763,8 +851,183 @@ export default function AdminDashboardPage() {
             className="px-8 py-3 rounded-xl bg-[#C5A059] hover:bg-[#b59049] text-[#050B18] text-xs font-bold uppercase tracking-wider shadow-md flex items-center space-x-2"
           >
             <Save className="w-4 h-4" />
-            <span>{saving ? 'SAVING...' : 'SAVE SETTINGS & TICKER'}</span>
+            <span>{saving ? 'SAVING...' : 'SAVE SETTINGS & MESSAGE'}</span>
           </button>
+        </div>
+      )}
+
+      {/* EDIT COURSE MODAL SCREEN */}
+      {editingCourse && (
+        <div
+          onClick={() => setEditingCourse(null)}
+          className="fixed inset-0 z-50 bg-[#050B18]/85 backdrop-blur-md flex items-center justify-center p-4"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white border-2 border-[#C5A059] max-w-xl w-full rounded-2xl shadow-2xl p-6 space-y-4 relative text-xs"
+          >
+            <div className="flex items-center justify-between border-b pb-3">
+              <h3 className="text-lg font-serif font-bold text-[#050B18]">Edit Course Details</h3>
+              <button onClick={() => setEditingCourse(null)} className="p-1 text-slate-500 hover:text-[#050B18]">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-3">
+              <div>
+                <label className="font-bold block mb-1">Course Title</label>
+                <input
+                  type="text"
+                  value={editingCourse.name}
+                  onChange={(e) => setEditingCourse({ ...editingCourse, name: e.target.value })}
+                  className="w-full p-2.5 rounded-xl border border-slate-300 font-bold text-sm"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="font-bold block mb-1">Duration</label>
+                  <input
+                    type="text"
+                    value={editingCourse.duration}
+                    onChange={(e) => setEditingCourse({ ...editingCourse, duration: e.target.value })}
+                    className="w-full p-2.5 rounded-xl border border-slate-300"
+                  />
+                </div>
+                <div>
+                  <label className="font-bold block mb-1">Fees</label>
+                  <input
+                    type="text"
+                    value={editingCourse.fees}
+                    onChange={(e) => setEditingCourse({ ...editingCourse, fees: e.target.value })}
+                    className="w-full p-2.5 rounded-xl border border-slate-300"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="font-bold block mb-1">Short Description</label>
+                <textarea
+                  rows={2}
+                  value={editingCourse.shortDesc}
+                  onChange={(e) => setEditingCourse({ ...editingCourse, shortDesc: e.target.value })}
+                  className="w-full p-2.5 rounded-xl border border-slate-300"
+                />
+              </div>
+            </div>
+
+            <div className="pt-2 flex items-center justify-end space-x-3">
+              <button
+                onClick={() => setEditingCourse(null)}
+                className="px-4 py-2 bg-slate-200 rounded-xl font-bold"
+              >
+                CANCEL
+              </button>
+              <button
+                onClick={() => {
+                  const updatedCourses = data.courses.map((c) => (c.id === editingCourse.id ? editingCourse : c));
+                  handleSaveData({ ...data, courses: updatedCourses });
+                  setEditingCourse(null);
+                }}
+                className="px-6 py-2 bg-[#C5A059] text-[#050B18] rounded-xl font-bold uppercase shadow-md"
+              >
+                SAVE COURSE CHANGES
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* EDIT MARKSHEET RESULT MODAL SCREEN */}
+      {editingResult && (
+        <div
+          onClick={() => setEditingResult(null)}
+          className="fixed inset-0 z-50 bg-[#050B18]/85 backdrop-blur-md flex items-center justify-center p-4"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white border-2 border-[#C5A059] max-w-xl w-full rounded-2xl shadow-2xl p-6 space-y-4 relative text-xs"
+          >
+            <div className="flex items-center justify-between border-b pb-3">
+              <h3 className="text-lg font-serif font-bold text-[#050B18]">Edit Student Marksheet Record</h3>
+              <button onClick={() => setEditingResult(null)} className="p-1 text-slate-500 hover:text-[#050B18]">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-3">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="font-bold block mb-1">Roll Number</label>
+                  <input
+                    type="text"
+                    value={editingResult.rollNo}
+                    onChange={(e) => setEditingResult({ ...editingResult, rollNo: e.target.value })}
+                    className="w-full p-2.5 rounded-xl border border-slate-300 font-mono font-bold"
+                  />
+                </div>
+                <div>
+                  <label className="font-bold block mb-1">Student Name</label>
+                  <input
+                    type="text"
+                    value={editingResult.studentName}
+                    onChange={(e) => setEditingResult({ ...editingResult, studentName: e.target.value })}
+                    className="w-full p-2.5 rounded-xl border border-slate-300 font-bold"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="font-bold block mb-1">Father's Name</label>
+                  <input
+                    type="text"
+                    value={editingResult.fatherName}
+                    onChange={(e) => setEditingResult({ ...editingResult, fatherName: e.target.value })}
+                    className="w-full p-2.5 rounded-xl border border-slate-300"
+                  />
+                </div>
+                <div>
+                  <label className="font-bold block mb-1">Percentage</label>
+                  <input
+                    type="text"
+                    value={editingResult.percentage}
+                    onChange={(e) => setEditingResult({ ...editingResult, percentage: e.target.value })}
+                    className="w-full p-2.5 rounded-xl border border-slate-300"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="font-bold block mb-1">Course Title</label>
+                <input
+                  type="text"
+                  value={editingResult.course}
+                  onChange={(e) => setEditingResult({ ...editingResult, course: e.target.value })}
+                  className="w-full p-2.5 rounded-xl border border-slate-300"
+                />
+              </div>
+            </div>
+
+            <div className="pt-2 flex items-center justify-end space-x-3">
+              <button
+                onClick={() => setEditingResult(null)}
+                className="px-4 py-2 bg-slate-200 rounded-xl font-bold"
+              >
+                CANCEL
+              </button>
+              <button
+                onClick={() => {
+                  const updatedResults = data.studentResults.map((r) => (r.rollNo === editingResult.rollNo ? editingResult : r));
+                  handleSaveData({ ...data, studentResults: updatedResults });
+                  setEditingResult(null);
+                }}
+                className="px-6 py-2 bg-[#C5A059] text-[#050B18] rounded-xl font-bold uppercase shadow-md"
+              >
+                SAVE MARKSHEET CHANGES
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
