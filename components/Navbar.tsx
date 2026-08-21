@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu, X, ArrowRight, Phone, Sparkles, Flame } from 'lucide-react';
+import initialData from '@/data/initialData.json';
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -28,7 +29,7 @@ export default function Navbar() {
     { name: 'CONTACT', href: '/contact' },
   ];
 
-  const marqueeText = "🔥 ADMISSIONS OPEN FOR 2026-2027 BATCHES • ISO 9001:2015 & GOVT. REGISTERED INSTITUTE • 100% DAILY PRACTICAL COMPUTER LABS • CALL ADMISSIONS: +91 8882362470 • SPECIAL SCHOLARSHIPS AVAILABLE • ";
+  const marqueeText = initialData.settings?.seo?.marqueeAnnouncement || "🔥 ADMISSIONS OPEN FOR 2026-2027 BATCHES • ISO 9001:2015 & GOVT. REGISTERED INSTITUTE • 100% DAILY PRACTICAL COMPUTER LABS • CALL ADMISSIONS: +91 8882362470 • SPECIAL SCHOLARSHIPS AVAILABLE • ";
 
   return (
     <>
@@ -61,7 +62,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* 2. MAIN NAVBAR - All Navigation Spelling in CAPITAL letters */}
+      {/* 2. MAIN NAVBAR */}
       <header
         className={`z-50 transition-all duration-300 font-sans ${
           scrolled
@@ -92,7 +93,7 @@ export default function Navbar() {
             </div>
           </Link>
 
-          {/* Desktop Navigation Links - ALL CAPS / CAPITAL LETTERS */}
+          {/* Desktop Navigation Links */}
           <nav className="hidden lg:flex items-center space-x-5 xl:space-x-7">
             {navLinks.map((link) => {
               const isActive = pathname === link.href;
@@ -146,7 +147,7 @@ export default function Navbar() {
         </div>
       </header>
 
-      {/* Mobile Drawer Menu - ALL CAPS */}
+      {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
         <div className="lg:hidden fixed inset-x-4 top-20 z-50 bg-[#050B18] text-white border border-[#C5A059]/40 shadow-2xl rounded-2xl p-6 space-y-3 font-sans">
           {navLinks.map((link) => (

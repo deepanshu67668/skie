@@ -76,6 +76,16 @@ export interface Enquiry {
   status: 'New' | 'Contacted' | 'Follow-up' | 'Converted' | 'Closed';
 }
 
+export interface SeoSettings {
+  metaTitle: string;
+  metaDescription: string;
+  keywords: string;
+  author: string;
+  ogImage: string;
+  googleAnalyticsId: string;
+  marqueeAnnouncement: string;
+}
+
 export interface Settings {
   brandName: string;
   shortBrand: string;
@@ -90,6 +100,7 @@ export interface Settings {
   trustRegNo: string;
   tradeMarkNo: string;
   laborRegNo: string;
+  seo?: SeoSettings;
   chairman: {
     name: string;
     title: string;

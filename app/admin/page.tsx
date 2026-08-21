@@ -2,16 +2,19 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { DBData, Course, StudentResult, Enquiry, GalleryItem, Testimonial } from '@/lib/db';
-import { LayoutDashboard, Users, BookOpen, Award, Image as ImageIcon, MessageSquare, Settings as SettingsIcon, LogOut, Save, Plus, Trash2, CheckCircle2, AlertCircle } from 'lucide-react';
+import { DBData, Course, StudentResult, Enquiry, GalleryItem } from '@/lib/db';
+import { LayoutDashboard, Users, BookOpen, Award, Image as ImageIcon, MessageSquare, Settings as SettingsIcon, LogOut, Save, Plus, Trash2, CheckCircle2, AlertCircle, Globe, Search, Sparkles, MessageCircle, Phone, ShieldCheck, Flame, Edit } from 'lucide-react';
 
 export default function AdminDashboardPage() {
   const router = useRouter();
   const [data, setData] = useState<DBData | null>(null);
   const [adminKey, setAdminKey] = useState<string>('');
-  const [activeTab, setActiveTab] = useState<'enquiries' | 'courses' | 'results' | 'gallery' | 'settings'>('enquiries');
+  const [activeTab, setActiveTab] = useState<'enquiries' | 'courses' | 'results' | 'faculty' | 'seo' | 'gallery' | 'settings'>('enquiries');
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  // Search/Filter State inside Admin
+  const [enquirySearch, setEnquirySearch] = useState('');
 
   // New Course Modal State
   const [newCourse, setNewCourse] = useState<Partial<Course>>({
@@ -21,12 +24,12 @@ export default function AdminDashboardPage() {
     fullDesc: '',
     duration: '6 Months',
     fees: '₹1,000 / Month',
-    skillLevel: 'Beginner',
-    image: 'https://skieofficial.com/wp-content/uploads/2026/01/Diploma-Courses-683x1024.webp',
-    curriculum: ['Module 1: Fundamentals', 'Module 2: Practical Labs'],
-    careerOps: ['Office Assistant'],
-    eligibility: '10th Pass',
-    toolsCovered: ['MS Office'],
+    skillLevel: 'Beginner to Advanced',
+    image: '/images/course_computer.jpg',
+    curriculum: ['Module 1: Computer Fundamentals', 'Module 2: MS Office & Internet Skills'],
+    careerOps: ['Office Assistant', 'Data Entry Executive'],
+    eligibility: '10th / 12th Pass',
+    toolsCovered: ['MS Office', 'Windows 11'],
     certificateProvided: true,
     featured: true,
   });
@@ -38,11 +41,11 @@ export default function AdminDashboardPage() {
     fatherName: '',
     course: 'Advance Diploma in Computer Applications (ADCA)',
     year: '2026',
-    session: '2025-2026',
+    session: 'Jan 2025 - Dec 2025',
     grade: 'A+',
-    totalMarks: 470,
+    totalMarks: 475,
     maxMarks: 500,
-    percentage: '94%',
+    percentage: '95%',
     status: 'Passed with Distinction',
     issueDate: new Date().toISOString().split('T')[0],
     verificationCode: `SKIE-VER-${Math.floor(10000 + Math.random() * 90000)}`,
@@ -58,7 +61,21 @@ export default function AdminDashboardPage() {
 
     fetch('/api/data')
       .then((res) => res.json())
-      .then((dbData: DBData) => setData(dbData))
+      .then((dbData: DBData) => {
+        // Ensure SEO structure exists
+        if (!dbData.settings.seo) {
+          dbData.settings.seo = {
+            metaTitle: "SKIE Academy | Shri Krishan Institute of Education",
+            metaDescription: "Education that builds practical skills for the real world. ISO 9001:2015 & Govt. Registered Institute.",
+            keywords: "computer course, ADCA, DCA, Tally Prime, Python, Ghaziabad",
+            author: "Shri Krishan Institute of Education",
+            ogImage: "/images/campus_facade.jpg",
+            googleAnalyticsId: "G-SKIE2026",
+            marqueeAnnouncement: "🔥 ADMISSIONS OPEN FOR 2026-2027 BATCHES • ISO 9001:2015 & GOVT. REGISTERED INSTITUTE • 100% DAILY PRACTICAL COMPUTER LABS • CALL ADMISSIONS: +91 8882362470 • SPECIAL SCHOLARSHIPS AVAILABLE • ",
+          };
+        }
+        setData(dbData);
+      })
       .catch(() => setMsg({ type: 'error', text: 'Failed to load initial data.' }));
   }, [router]);
 
@@ -74,7 +91,7 @@ export default function AdminDashboardPage() {
 
       if (res.ok) {
         setData(updatedData);
-        setMsg({ type: 'success', text: 'Changes saved successfully to website database!' });
+        setMsg({ type: 'success', text: 'Changes saved successfully to SKIE Website database & SEO metadata!' });
       } else {
         setMsg({ type: 'error', text: 'Failed to save changes.' });
       }
@@ -92,112 +109,138 @@ export default function AdminDashboardPage() {
 
   if (!data) {
     return (
-      <div className="min-h-[70vh] flex items-center justify-center text-slate-600 font-bold">
-        Loading SKIE Admin Dashboard...
+      <div className="min-h-[70vh] flex items-center justify-center text-slate-600 font-bold font-sans">
+        <div className="text-center space-y-3">
+          <div className="w-12 h-12 border-4 border-[#C5A059] border-t-transparent rounded-full animate-spin mx-auto" />
+          <p>Loading SKIE Executive Control Center...</p>
+        </div>
       </div>
     );
   }
 
-  // Quick stats
+  // Quick Stats
   const totalEnquiries = data.enquiries.length;
   const newEnquiries = data.enquiries.filter((e) => e.status === 'New').length;
   const totalCourses = data.courses.length;
   const totalResults = data.studentResults.length;
 
+  const filteredEnquiries = enquirySearch
+    ? data.enquiries.filter(
+        (e) =>
+          e.name.toLowerCase().includes(enquirySearch.toLowerCase()) ||
+          e.phone.includes(enquirySearch) ||
+          e.course.toLowerCase().includes(enquirySearch.toLowerCase())
+      )
+    : data.enquiries;
+
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8 pb-24">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8 pb-24 font-sans bg-[#FBFBF9]">
       
-      {/* Dashboard Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-brand-navy text-white p-6 rounded-3xl shadow-xl">
-        <div className="flex items-center space-x-3">
-          <div className="p-3 rounded-2xl bg-brand-cyan/20 text-brand-cyan">
-            <LayoutDashboard className="w-6 h-6" />
+      {/* Executive Control Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#050B18] text-white p-6 sm:p-8 rounded-3xl shadow-2xl border-2 border-[#C5A059]">
+        <div className="flex items-center space-x-4">
+          <div className="w-14 h-14 rounded-2xl bg-[#C5A059] text-[#050B18] flex items-center justify-center font-serif font-black text-2xl shadow-lg flex-shrink-0">
+            S
           </div>
           <div>
-            <h1 className="text-2xl font-black">SKIE Academy Management Portal</h1>
-            <p className="text-xs text-slate-300">Live Website Content & Enquiry Dashboard</p>
+            <div className="flex items-center space-x-2">
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-[#C5A059]/20 text-[#C5A059] border border-[#C5A059]/40">
+                ADMIN CONTROL CENTER
+              </span>
+              <span className="text-[10px] text-emerald-400 font-bold flex items-center space-x-1">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span>LIVE SYSTEM ACTIVE</span>
+              </span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-serif font-bold text-white mt-1">
+              SKIE Academy Institutional Dashboard
+            </h1>
+            <p className="text-xs text-slate-300">
+              Manage Live Admissions, Courses, Marksheets, SEO Meta Data & Marquee Ticker
+            </p>
           </div>
         </div>
 
         <button
           onClick={handleLogout}
-          className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-rose-500/20 text-slate-200 hover:text-rose-300 text-xs font-bold transition-colors flex items-center space-x-1.5 self-start sm:self-auto"
+          className="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-rose-600 text-slate-200 hover:text-white text-xs font-bold transition-all shadow-md flex items-center space-x-2 self-start sm:self-auto border border-slate-700"
         >
           <LogOut className="w-4 h-4" />
-          <span>Logout Staff</span>
+          <span>LOGOUT STAFF</span>
         </button>
       </div>
 
       {msg && (
         <div
-          className={`p-4 rounded-2xl text-xs font-bold flex items-center space-x-2 ${
+          className={`p-4 rounded-2xl text-xs font-bold flex items-center space-x-2 shadow-md ${
             msg.type === 'success'
-              ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
-              : 'bg-rose-50 text-rose-800 border border-rose-200'
+              ? 'bg-emerald-50 text-emerald-800 border-2 border-emerald-300'
+              : 'bg-rose-50 text-rose-800 border-2 border-rose-300'
           }`}
         >
           {msg.type === 'success' ? (
-            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+            <CheckCircle2 className="w-5 h-5 text-emerald-600 flex-shrink-0" />
           ) : (
-            <AlertCircle className="w-4 h-4 text-rose-600" />
+            <AlertCircle className="w-5 h-5 text-rose-600 flex-shrink-0" />
           )}
           <span>{msg.text}</span>
         </div>
       )}
 
-      {/* Metric Cards Row */}
+      {/* Overview Metric Cards Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         
-        <div className="glass-card p-5 rounded-2xl border border-slate-200 flex items-center justify-between">
+        <div className="bg-white p-5 rounded-2xl border-2 border-slate-200 shadow-sm flex items-center justify-between">
           <div>
-            <p className="text-xs font-bold text-slate-500 uppercase">New Leads</p>
-            <p className="text-3xl font-black text-brand-bright mt-1">{newEnquiries}</p>
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">New Leads Today</p>
+            <p className="text-3xl font-black text-[#050B18] mt-1">{newEnquiries}</p>
           </div>
-          <div className="p-3 rounded-xl bg-brand-bright/10 text-brand-bright">
-            <Users className="w-6 h-6" />
+          <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-600 flex items-center justify-center font-bold">
+            <Flame className="w-6 h-6 animate-pulse" />
           </div>
         </div>
 
-        <div className="glass-card p-5 rounded-2xl border border-slate-200 flex items-center justify-between">
+        <div className="bg-white p-5 rounded-2xl border-2 border-slate-200 shadow-sm flex items-center justify-between">
           <div>
-            <p className="text-xs font-bold text-slate-500 uppercase">Total Enquiries</p>
-            <p className="text-3xl font-black text-slate-900 mt-1">{totalEnquiries}</p>
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Enquiries</p>
+            <p className="text-3xl font-black text-[#050B18] mt-1">{totalEnquiries}</p>
           </div>
-          <div className="p-3 rounded-xl bg-brand-navy/10 text-brand-navy">
-            <MessageSquare className="w-6 h-6" />
+          <div className="w-12 h-12 rounded-2xl bg-[#050B18]/10 text-[#050B18] flex items-center justify-center font-bold">
+            <Users className="w-6 h-6 text-[#050B18]" />
           </div>
         </div>
 
-        <div className="glass-card p-5 rounded-2xl border border-slate-200 flex items-center justify-between">
+        <div className="bg-white p-5 rounded-2xl border-2 border-slate-200 shadow-sm flex items-center justify-between">
           <div>
-            <p className="text-xs font-bold text-slate-500 uppercase">Published Courses</p>
-            <p className="text-3xl font-black text-slate-900 mt-1">{totalCourses}</p>
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Active Courses</p>
+            <p className="text-3xl font-black text-[#C5A059] mt-1">{totalCourses}</p>
           </div>
-          <div className="p-3 rounded-xl bg-cyan-500/10 text-cyan-600">
-            <BookOpen className="w-6 h-6" />
+          <div className="w-12 h-12 rounded-2xl bg-[#C5A059]/15 text-[#C5A059] flex items-center justify-center font-bold">
+            <BookOpen className="w-6 h-6 text-[#C5A059]" />
           </div>
         </div>
 
-        <div className="glass-card p-5 rounded-2xl border border-slate-200 flex items-center justify-between">
+        <div className="bg-white p-5 rounded-2xl border-2 border-slate-200 shadow-sm flex items-center justify-between">
           <div>
-            <p className="text-xs font-bold text-slate-500 uppercase">Verified Marksheets</p>
-            <p className="text-3xl font-black text-slate-900 mt-1">{totalResults}</p>
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Verified Marksheets</p>
+            <p className="text-3xl font-black text-emerald-600 mt-1">{totalResults}</p>
           </div>
-          <div className="p-3 rounded-xl bg-emerald-500/10 text-emerald-600">
-            <Award className="w-6 h-6" />
+          <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center font-bold">
+            <ShieldCheck className="w-6 h-6" />
           </div>
         </div>
 
       </div>
 
-      {/* Navigation Tabs */}
-      <div className="flex items-center space-x-2 border-b border-slate-200 overflow-x-auto pb-2 scrollbar-none">
+      {/* Tab Controls Bar */}
+      <div className="flex items-center space-x-2 border-b-2 border-slate-200 overflow-x-auto pb-3 scrollbar-none">
         {[
-          { id: 'enquiries', label: `Student Enquiries (${totalEnquiries})`, icon: Users },
-          { id: 'courses', label: `Course Management (${totalCourses})`, icon: BookOpen },
-          { id: 'results', label: `Student Results (${totalResults})`, icon: Award },
-          { id: 'gallery', label: 'Gallery & Media', icon: ImageIcon },
-          { id: 'settings', label: 'Website Settings', icon: SettingsIcon },
+          { id: 'enquiries', label: `ADMISSION LEADS (${totalEnquiries})`, icon: Users },
+          { id: 'courses', label: `COURSES (${totalCourses})`, icon: BookOpen },
+          { id: 'results', label: `STUDENT RESULTS (${totalResults})`, icon: Award },
+          { id: 'seo', label: 'SEO & META DATA', icon: Globe },
+          { id: 'gallery', label: 'GALLERY MEDIA', icon: ImageIcon },
+          { id: 'settings', label: 'SETTINGS & TICKER', icon: SettingsIcon },
         ].map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -205,48 +248,65 @@ export default function AdminDashboardPage() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center space-x-2 whitespace-nowrap transition-all ${
+              className={`px-5 py-3 rounded-xl text-xs font-black uppercase tracking-wider flex items-center space-x-2 whitespace-nowrap transition-all ${
                 isActive
-                  ? 'bg-brand-navy text-brand-cyan shadow-sm'
-                  : 'text-slate-600 hover:bg-slate-100'
+                  ? 'bg-[#050B18] text-[#C5A059] shadow-lg border border-[#C5A059]'
+                  : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200'
               }`}
             >
-              <Icon className="w-4 h-4" />
+              <Icon className="w-4 h-4 text-[#C5A059]" />
               <span>{tab.label}</span>
             </button>
           );
         })}
       </div>
 
-      {/* Tab 1: Enquiries Management */}
+      {/* Tab 1: Admission Enquiries */}
       {activeTab === 'enquiries' && (
-        <div className="glass-card p-6 rounded-2xl border border-slate-200 shadow-md space-y-6">
-          <h2 className="text-xl font-extrabold text-slate-900">Student Admission & Callback Enquiries</h2>
+        <div className="bg-white p-6 sm:p-8 rounded-2xl border-2 border-slate-200 shadow-md space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-4">
+            <div>
+              <h2 className="text-xl font-serif font-bold text-[#050B18]">Student Admission & Callback Leads</h2>
+              <p className="text-xs text-slate-500">Real-time leads submitted via online enquiry forms and splash screen</p>
+            </div>
+
+            <div className="relative w-full sm:w-64">
+              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                value={enquirySearch}
+                onChange={(e) => setEnquirySearch(e.target.value)}
+                placeholder="Search leads by name or phone..."
+                className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs outline-none focus:border-[#C5A059]"
+              />
+            </div>
+          </div>
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs text-slate-700">
-              <thead className="bg-slate-100 uppercase text-[11px] font-bold text-slate-600 border-b">
+              <thead className="bg-[#050B18] text-white uppercase text-[10px] font-bold tracking-wider">
                 <tr>
-                  <th className="p-3">Date</th>
-                  <th className="p-3">Student Name</th>
-                  <th className="p-3">Phone</th>
-                  <th className="p-3">Course</th>
-                  <th className="p-3">Message</th>
-                  <th className="p-3">Status</th>
-                  <th className="p-3 text-right">Action</th>
+                  <th className="p-3.5">Date</th>
+                  <th className="p-3.5">Student Name</th>
+                  <th className="p-3.5">Phone Number</th>
+                  <th className="p-3.5">Course Requested</th>
+                  <th className="p-3.5">Status</th>
+                  <th className="p-3.5 text-right">Quick Contact / Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
-                {data.enquiries.map((enq) => (
+              <tbody className="divide-y divide-slate-100 font-medium">
+                {filteredEnquiries.map((enq) => (
                   <tr key={enq.id} className="hover:bg-slate-50">
-                    <td className="p-3 font-semibold whitespace-nowrap">{enq.date}</td>
-                    <td className="p-3 font-bold text-slate-900">{enq.name}</td>
-                    <td className="p-3 font-bold text-brand-bright">
-                      <a href={`tel:${enq.phone}`}>{enq.phone}</a>
+                    <td className="p-3.5 font-semibold whitespace-nowrap text-slate-500">{enq.date}</td>
+                    <td className="p-3.5 font-bold text-[#050B18]">{enq.name}</td>
+                    <td className="p-3.5 font-bold text-[#C5A059]">
+                      <a href={`tel:${enq.phone}`} className="hover:underline flex items-center space-x-1">
+                        <Phone className="w-3 h-3 text-[#C5A059]" />
+                        <span>{enq.phone}</span>
+                      </a>
                     </td>
-                    <td className="p-3 font-medium">{enq.course}</td>
-                    <td className="p-3 text-slate-500 max-w-xs truncate">{enq.message}</td>
-                    <td className="p-3">
+                    <td className="p-3.5 font-semibold text-slate-800">{enq.course}</td>
+                    <td className="p-3.5">
                       <select
                         value={enq.status}
                         onChange={(e) => {
@@ -258,7 +318,7 @@ export default function AdminDashboardPage() {
                           };
                           handleSaveData(updated);
                         }}
-                        className={`px-2.5 py-1 rounded-lg text-xs font-bold outline-none border ${
+                        className={`px-3 py-1 rounded-lg text-xs font-bold outline-none border shadow-xs ${
                           enq.status === 'New'
                             ? 'bg-amber-100 text-amber-800 border-amber-300'
                             : enq.status === 'Contacted'
@@ -275,7 +335,16 @@ export default function AdminDashboardPage() {
                         <option value="Closed">Closed</option>
                       </select>
                     </td>
-                    <td className="p-3 text-right">
+                    <td className="p-3.5 text-right flex items-center justify-end space-x-2">
+                      <a
+                        href={`https://wa.me/91${enq.phone.replace(/[^0-9]/g, '')}?text=Hello%20${encodeURIComponent(enq.name)},%20this%20is%20SKIE%20Academy.%20We%20received%20your%20enquiry%20for%20${encodeURIComponent(enq.course)}.`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-2.5 py-1 bg-[#25D366] text-white rounded-lg font-bold text-[10px] flex items-center space-x-1 shadow-sm"
+                      >
+                        <MessageCircle className="w-3 h-3 fill-current" />
+                        <span>WHATSAPP</span>
+                      </a>
                       <button
                         onClick={() => {
                           const updated = {
@@ -285,7 +354,7 @@ export default function AdminDashboardPage() {
                           handleSaveData(updated);
                         }}
                         className="p-1.5 rounded-lg text-rose-600 hover:bg-rose-50"
-                        title="Delete Enquiry"
+                        title="Delete Lead"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -301,26 +370,24 @@ export default function AdminDashboardPage() {
       {/* Tab 2: Course Management */}
       {activeTab === 'courses' && (
         <div className="space-y-6">
-          
-          {/* Add New Course Section */}
-          <div className="glass-card p-6 rounded-2xl border border-slate-200 shadow-md space-y-4">
-            <h2 className="text-lg font-bold text-slate-900 flex items-center space-x-2">
-              <Plus className="w-5 h-5 text-brand-bright" />
-              <span>Add New Course to SKIE Website</span>
+          <div className="bg-white p-6 sm:p-8 rounded-2xl border-2 border-slate-200 shadow-md space-y-4">
+            <h2 className="text-lg font-serif font-bold text-[#050B18] flex items-center space-x-2">
+              <Plus className="w-5 h-5 text-[#C5A059]" />
+              <span>Add & Publish New Course</span>
             </h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
               <input
                 type="text"
-                placeholder="Course Title (e.g. Graphic Design)"
+                placeholder="Course Title (e.g. ADCA Master Diploma)"
                 value={newCourse.name}
                 onChange={(e) => setNewCourse({ ...newCourse, name: e.target.value })}
-                className="p-2.5 rounded-xl border"
+                className="p-3 rounded-xl border border-slate-300 outline-none focus:border-[#C5A059]"
               />
               <select
                 value={newCourse.category}
                 onChange={(e) => setNewCourse({ ...newCourse, category: e.target.value })}
-                className="p-2.5 rounded-xl border bg-white"
+                className="p-3 rounded-xl border border-slate-300 bg-white font-semibold outline-none"
               >
                 <option>Diploma Courses</option>
                 <option>Professional Courses</option>
@@ -330,24 +397,24 @@ export default function AdminDashboardPage() {
               </select>
               <input
                 type="text"
-                placeholder="Duration (e.g. 3 Months)"
+                placeholder="Duration (e.g. 12 Months)"
                 value={newCourse.duration}
                 onChange={(e) => setNewCourse({ ...newCourse, duration: e.target.value })}
-                className="p-2.5 rounded-xl border"
+                className="p-3 rounded-xl border border-slate-300 outline-none"
               />
               <input
                 type="text"
-                placeholder="Fees (e.g. ₹1,500 / Month)"
+                placeholder="Fees (e.g. ₹1,200 / Month)"
                 value={newCourse.fees}
                 onChange={(e) => setNewCourse({ ...newCourse, fees: e.target.value })}
-                className="p-2.5 rounded-xl border"
+                className="p-3 rounded-xl border border-slate-300 outline-none"
               />
               <input
                 type="text"
                 placeholder="Short Description"
                 value={newCourse.shortDesc}
                 onChange={(e) => setNewCourse({ ...newCourse, shortDesc: e.target.value })}
-                className="p-2.5 rounded-xl border sm:col-span-2"
+                className="p-3 rounded-xl border border-slate-300 sm:col-span-2 outline-none"
               />
             </div>
 
@@ -362,33 +429,33 @@ export default function AdminDashboardPage() {
                   fullDesc: newCourse.shortDesc || '',
                   duration: newCourse.duration || '3 Months',
                   fees: newCourse.fees || 'Contact Institute',
-                  skillLevel: 'Beginner',
+                  skillLevel: 'Beginner to Advanced',
                   featured: true,
-                  image: newCourse.image || 'https://skieofficial.com/wp-content/uploads/2026/01/Certificate-Course-683x1024.webp',
-                  curriculum: ['Module 1: Foundations', 'Module 2: Practical Project'],
-                  careerOps: ['Junior Executive'],
+                  image: newCourse.image || '/images/course_computer.jpg',
+                  curriculum: ['Module 1: Core Fundamentals', 'Module 2: Practical Office Tools'],
+                  careerOps: ['Junior Associate'],
                   eligibility: '10th/12th Pass',
-                  toolsCovered: ['Software Tools'],
+                  toolsCovered: ['MS Office', 'Computer Basics'],
                   certificateProvided: true,
                 };
                 const updated = { ...data, courses: [created, ...data.courses] };
                 handleSaveData(updated);
                 setNewCourse({ name: '', shortDesc: '' });
               }}
-              className="px-6 py-2.5 rounded-xl bg-brand-bright text-white text-xs font-bold"
+              className="px-8 py-3 rounded-xl bg-[#C5A059] hover:bg-[#b59049] text-[#050B18] font-bold text-xs uppercase tracking-wider shadow-md"
             >
-              Publish New Course
+              PUBLISH COURSE TO WEBSITE
             </button>
           </div>
 
-          {/* Existing Courses List */}
+          {/* List of Published Courses */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {data.courses.map((course) => (
-              <div key={course.id} className="p-4 rounded-xl bg-white border border-slate-200 flex items-center justify-between">
+              <div key={course.id} className="p-4 rounded-xl bg-white border-2 border-slate-200 flex items-center justify-between shadow-xs">
                 <div>
-                  <span className="text-[10px] font-bold text-brand-cyan bg-brand-navy px-2 py-0.5 rounded">{course.category}</span>
-                  <h4 className="font-bold text-sm text-slate-900 mt-1">{course.name}</h4>
-                  <p className="text-xs text-slate-500">{course.duration} • {course.fees}</p>
+                  <span className="text-[10px] font-bold text-[#C5A059] bg-[#050B18] px-2.5 py-0.5 rounded">{course.category}</span>
+                  <h4 className="font-bold text-sm text-[#050B18] mt-1.5">{course.name}</h4>
+                  <p className="text-xs text-slate-500 font-semibold">{course.duration} • {course.fees}</p>
                 </div>
                 <button
                   onClick={() => {
@@ -396,23 +463,23 @@ export default function AdminDashboardPage() {
                     handleSaveData(updated);
                   }}
                   className="p-2 text-rose-600 hover:bg-rose-50 rounded-lg"
+                  title="Delete Course"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
               </div>
             ))}
           </div>
-
         </div>
       )}
 
       {/* Tab 3: Student Results Management */}
       {activeTab === 'results' && (
         <div className="space-y-6">
-          <div className="glass-card p-6 rounded-2xl border border-slate-200 shadow-md space-y-4">
-            <h2 className="text-lg font-bold text-slate-900 flex items-center space-x-2">
-              <Plus className="w-5 h-5 text-brand-bright" />
-              <span>Add New Student Examination Result</span>
+          <div className="bg-white p-6 sm:p-8 rounded-2xl border-2 border-slate-200 shadow-md space-y-4">
+            <h2 className="text-lg font-serif font-bold text-[#050B18] flex items-center space-x-2">
+              <Plus className="w-5 h-5 text-[#C5A059]" />
+              <span>Add New Student Examination Result Record</span>
             </h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
@@ -421,35 +488,35 @@ export default function AdminDashboardPage() {
                 placeholder="Roll Number (e.g. SKIE-2026-0201)"
                 value={newResult.rollNo}
                 onChange={(e) => setNewResult({ ...newResult, rollNo: e.target.value })}
-                className="p-2.5 rounded-xl border"
+                className="p-3 rounded-xl border border-slate-300 font-mono"
               />
               <input
                 type="text"
                 placeholder="Student Name"
                 value={newResult.studentName}
                 onChange={(e) => setNewResult({ ...newResult, studentName: e.target.value })}
-                className="p-2.5 rounded-xl border"
+                className="p-3 rounded-xl border border-slate-300 font-bold"
               />
               <input
                 type="text"
                 placeholder="Father's Name"
                 value={newResult.fatherName}
                 onChange={(e) => setNewResult({ ...newResult, fatherName: e.target.value })}
-                className="p-2.5 rounded-xl border"
+                className="p-3 rounded-xl border border-slate-300"
               />
               <input
                 type="text"
                 placeholder="Course Name"
                 value={newResult.course}
                 onChange={(e) => setNewResult({ ...newResult, course: e.target.value })}
-                className="p-2.5 rounded-xl border sm:col-span-2"
+                className="p-3 rounded-xl border border-slate-300 sm:col-span-2"
               />
               <input
                 type="text"
-                placeholder="Percentage (e.g. 92%)"
+                placeholder="Percentage (e.g. 95%)"
                 value={newResult.percentage}
                 onChange={(e) => setNewResult({ ...newResult, percentage: e.target.value })}
-                className="p-2.5 rounded-xl border"
+                className="p-3 rounded-xl border border-slate-300"
               />
             </div>
 
@@ -464,9 +531,9 @@ export default function AdminDashboardPage() {
                   year: newResult.year || '2026',
                   session: newResult.session || '2025-2026',
                   grade: newResult.grade || 'A+',
-                  totalMarks: newResult.totalMarks || 450,
+                  totalMarks: newResult.totalMarks || 475,
                   maxMarks: 500,
-                  percentage: newResult.percentage || '90%',
+                  percentage: newResult.percentage || '95%',
                   status: 'Passed with Distinction',
                   issueDate: new Date().toISOString().split('T')[0],
                   verificationCode: `SKIE-VER-${Math.floor(10000 + Math.random() * 90000)}`,
@@ -475,17 +542,17 @@ export default function AdminDashboardPage() {
                 handleSaveData(updated);
                 setNewResult({ studentName: '', fatherName: '' });
               }}
-              className="px-6 py-2.5 rounded-xl bg-brand-bright text-white text-xs font-bold"
+              className="px-8 py-3 rounded-xl bg-[#C5A059] hover:bg-[#b59049] text-[#050B18] font-bold text-xs uppercase tracking-wider shadow-md"
             >
-              Add Marksheet Record
+              ADD MARKSHEET RECORD
             </button>
           </div>
 
-          <div className="divide-y divide-slate-100 bg-white rounded-2xl border p-4">
+          <div className="divide-y divide-slate-100 bg-white rounded-2xl border-2 border-slate-200 p-4">
             {data.studentResults.map((res) => (
               <div key={res.rollNo} className="py-3 flex items-center justify-between text-xs">
                 <div>
-                  <span className="font-mono font-bold text-brand-navy">{res.rollNo}</span> • <span className="font-bold text-slate-900">{res.studentName}</span> ({res.course})
+                  <span className="font-mono font-bold text-[#C5A059] bg-[#050B18] px-2 py-0.5 rounded">{res.rollNo}</span> • <span className="font-bold text-[#050B18]">{res.studentName}</span> ({res.course})
                 </div>
                 <div className="flex items-center space-x-3">
                   <span className="font-bold text-emerald-600">{res.percentage} (Grade {res.grade})</span>
@@ -494,7 +561,8 @@ export default function AdminDashboardPage() {
                       const updated = { ...data, studentResults: data.studentResults.filter((r) => r.rollNo !== res.rollNo) };
                       handleSaveData(updated);
                     }}
-                    className="text-rose-600 hover:bg-rose-50 p-1 rounded"
+                    className="text-rose-600 hover:bg-rose-50 p-1.5 rounded-lg"
+                    title="Delete Marksheet Record"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -505,46 +573,109 @@ export default function AdminDashboardPage() {
         </div>
       )}
 
-      {/* Tab 5: Settings */}
-      {activeTab === 'settings' && (
-        <div className="glass-card p-6 rounded-2xl border border-slate-200 shadow-md space-y-6">
-          <h2 className="text-lg font-bold text-slate-900 flex items-center space-x-2">
-            <SettingsIcon className="w-5 h-5 text-brand-bright" />
-            <span>Update SKIE Campus Contact & Header Information</span>
-          </h2>
+      {/* Tab 4: SEO & Meta Data Manager */}
+      {activeTab === 'seo' && (
+        <div className="bg-white p-6 sm:p-8 rounded-2xl border-2 border-slate-200 shadow-md space-y-6">
+          <div className="flex items-center justify-between border-b border-slate-200 pb-4">
+            <div>
+              <h2 className="text-xl font-serif font-bold text-[#050B18] flex items-center space-x-2">
+                <Globe className="w-5 h-5 text-[#C5A059]" />
+                <span>SEO & Search Engine Metadata Control Center</span>
+              </h2>
+              <p className="text-xs text-slate-500">Manage site meta titles, descriptions, keywords, OpenGraph share images, and tracking IDs</p>
+            </div>
+          </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+          <div className="space-y-4 text-xs">
             <div>
-              <label className="font-bold">Phone Number</label>
+              <label className="block font-bold text-[#050B18] mb-1">Website Meta Title Tag (appears in Google Search)</label>
               <input
                 type="text"
-                value={data.settings.phone}
+                value={data.settings.seo?.metaTitle || ''}
                 onChange={(e) =>
-                  setData({ ...data, settings: { ...data.settings, phone: e.target.value } })
+                  setData({
+                    ...data,
+                    settings: {
+                      ...data.settings,
+                      seo: { ...(data.settings.seo as any), metaTitle: e.target.value },
+                    },
+                  })
                 }
-                className="w-full p-2.5 rounded-xl border mt-1"
+                className="w-full p-3 rounded-xl border border-slate-300 outline-none focus:border-[#C5A059] font-semibold"
               />
             </div>
+
             <div>
-              <label className="font-bold">Email Address</label>
-              <input
-                type="text"
-                value={data.settings.email}
+              <label className="block font-bold text-[#050B18] mb-1">Meta Description Tag (Google search summary)</label>
+              <textarea
+                rows={3}
+                value={data.settings.seo?.metaDescription || ''}
                 onChange={(e) =>
-                  setData({ ...data, settings: { ...data.settings, email: e.target.value } })
+                  setData({
+                    ...data,
+                    settings: {
+                      ...data.settings,
+                      seo: { ...(data.settings.seo as any), metaDescription: e.target.value },
+                    },
+                  })
                 }
-                className="w-full p-2.5 rounded-xl border mt-1"
+                className="w-full p-3 rounded-xl border border-slate-300 outline-none focus:border-[#C5A059]"
               />
             </div>
-            <div className="sm:col-span-2">
-              <label className="font-bold">Campus Address</label>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block font-bold text-[#050B18] mb-1">SEO Keywords (Comma separated)</label>
+                <input
+                  type="text"
+                  value={data.settings.seo?.keywords || ''}
+                  onChange={(e) =>
+                    setData({
+                      ...data,
+                      settings: {
+                        ...data.settings,
+                        seo: { ...(data.settings.seo as any), keywords: e.target.value },
+                      },
+                    })
+                  }
+                  className="w-full p-3 rounded-xl border border-slate-300 outline-none focus:border-[#C5A059]"
+                />
+              </div>
+
+              <div>
+                <label className="block font-bold text-[#050B18] mb-1">Google Analytics ID</label>
+                <input
+                  type="text"
+                  value={data.settings.seo?.googleAnalyticsId || ''}
+                  onChange={(e) =>
+                    setData({
+                      ...data,
+                      settings: {
+                        ...data.settings,
+                        seo: { ...(data.settings.seo as any), googleAnalyticsId: e.target.value },
+                      },
+                    })
+                  }
+                  className="w-full p-3 rounded-xl border border-slate-300 font-mono outline-none focus:border-[#C5A059]"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block font-bold text-[#050B18] mb-1">OpenGraph Share Image URL (WhatsApp/Facebook preview)</label>
               <input
                 type="text"
-                value={data.settings.address}
+                value={data.settings.seo?.ogImage || ''}
                 onChange={(e) =>
-                  setData({ ...data, settings: { ...data.settings, address: e.target.value } })
+                  setData({
+                    ...data,
+                    settings: {
+                      ...data.settings,
+                      seo: { ...(data.settings.seo as any), ogImage: e.target.value },
+                    },
+                  })
                 }
-                className="w-full p-2.5 rounded-xl border mt-1"
+                className="w-full p-3 rounded-xl border border-slate-300 outline-none focus:border-[#C5A059]"
               />
             </div>
           </div>
@@ -552,10 +683,87 @@ export default function AdminDashboardPage() {
           <button
             onClick={() => handleSaveData(data)}
             disabled={saving}
-            className="px-8 py-3 rounded-xl bg-brand-bright text-white text-xs font-bold flex items-center space-x-2"
+            className="px-8 py-3 rounded-xl bg-[#C5A059] hover:bg-[#b59049] text-[#050B18] text-xs font-bold uppercase tracking-wider shadow-md flex items-center space-x-2"
           >
             <Save className="w-4 h-4" />
-            <span>{saving ? 'Saving...' : 'Save Settings Changes'}</span>
+            <span>{saving ? 'SAVING...' : 'SAVE SEO METADATA CHANGES'}</span>
+          </button>
+        </div>
+      )}
+
+      {/* Tab 6: Settings & Marquee Ticker */}
+      {activeTab === 'settings' && (
+        <div className="bg-white p-6 sm:p-8 rounded-2xl border-2 border-slate-200 shadow-md space-y-6">
+          <h2 className="text-lg font-serif font-bold text-[#050B18] flex items-center space-x-2">
+            <SettingsIcon className="w-5 h-5 text-[#C5A059]" />
+            <span>Update Campus Contact Info & Top Gold Marquee Ticker</span>
+          </h2>
+
+          <div className="space-y-4 text-xs">
+            <div>
+              <label className="block font-bold text-[#050B18] mb-1">Top Announcement Marquee Ticker Text (Movable Banner)</label>
+              <input
+                type="text"
+                value={data.settings.seo?.marqueeAnnouncement || ''}
+                onChange={(e) =>
+                  setData({
+                    ...data,
+                    settings: {
+                      ...data.settings,
+                      seo: { ...(data.settings.seo as any), marqueeAnnouncement: e.target.value },
+                    },
+                  })
+                }
+                className="w-full p-3 rounded-xl border border-slate-300 outline-none focus:border-[#C5A059] font-semibold"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block font-bold text-[#050B18] mb-1">Admissions Phone Number</label>
+                <input
+                  type="text"
+                  value={data.settings.phone}
+                  onChange={(e) =>
+                    setData({ ...data, settings: { ...data.settings, phone: e.target.value } })
+                  }
+                  className="w-full p-3 rounded-xl border border-slate-300 outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block font-bold text-[#050B18] mb-1">Official Email Address</label>
+                <input
+                  type="text"
+                  value={data.settings.email}
+                  onChange={(e) =>
+                    setData({ ...data, settings: { ...data.settings, email: e.target.value } })
+                  }
+                  className="w-full p-3 rounded-xl border border-slate-300 outline-none"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block font-bold text-[#050B18] mb-1">Campus Full Address</label>
+              <input
+                type="text"
+                value={data.settings.address}
+                onChange={(e) =>
+                  setData({ ...data, settings: { ...data.settings, address: e.target.value } })
+                }
+                className="w-full p-3 rounded-xl border border-slate-300 outline-none"
+              />
+            </div>
+          </div>
+
+          <button
+            onClick={() => handleSaveData(data)}
+            disabled={saving}
+            className="px-8 py-3 rounded-xl bg-[#C5A059] hover:bg-[#b59049] text-[#050B18] text-xs font-bold uppercase tracking-wider shadow-md flex items-center space-x-2"
+          >
+            <Save className="w-4 h-4" />
+            <span>{saving ? 'SAVING...' : 'SAVE SETTINGS & TICKER'}</span>
           </button>
         </div>
       )}
